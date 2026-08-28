@@ -1,4 +1,4 @@
-# Muster — HR / Employee Management System
+# HR / Employee Management System
 
 An intermediate-level ERP module built with **React, React Query, React Router and Supabase**.
 Role-based access is enforced in Postgres with Row Level Security, not in the client.
@@ -48,13 +48,13 @@ have made it impossible to seed the 23 existing employees without first creating
 
 ## Schema
 
-| Table | Purpose |
-|---|---|
-| `departments` | Cost centres, each with an optional manager |
-| `employees` | People. Self-referential `manager_id` builds the reporting tree |
-| `leave_requests` | Applications and their approval state |
-| `attendance` | One row per employee per day; `hours_worked` is a generated column |
-| `leave_balances` | Per employee, per year, per leave type |
+| Table            | Purpose                                                            |
+| ---------------- | ------------------------------------------------------------------ |
+| `departments`    | Cost centres, each with an optional manager                        |
+| `employees`      | People. Self-referential `manager_id` builds the reporting tree    |
+| `leave_requests` | Applications and their approval state                              |
+| `attendance`     | One row per employee per day; `hours_worked` is a generated column |
+| `leave_balances` | Per employee, per year, per leave type                             |
 
 Your original `public."EMS"` table is untouched. Its 23 rows were copied into
 the new schema, departments were normalised (`Fin` → `Finance`), and a manager
@@ -62,14 +62,14 @@ was promoted per department.
 
 ### Database logic
 
-| Function / trigger | What it does |
-|---|---|
-| `handle_new_user()` | Links a new signup to an employee record |
-| `seed_leave_balances()` | Grants 12 sick / 12 casual / 15 paid on employee insert |
-| `sync_leave_balance()` | Decrements balance on approval, restores it if reversed |
-| `stamp_leave_review()` | Stamps `reviewed_by` / `reviewed_at` server-side |
-| `payroll_summary(month)` | Computes the payroll table |
-| `dashboard_stats()` | Aggregates for the admin dashboard |
+| Function / trigger       | What it does                                            |
+| ------------------------ | ------------------------------------------------------- |
+| `handle_new_user()`      | Links a new signup to an employee record                |
+| `seed_leave_balances()`  | Grants 12 sick / 12 casual / 15 paid on employee insert |
+| `sync_leave_balance()`   | Decrements balance on approval, restores it if reversed |
+| `stamp_leave_review()`   | Stamps `reviewed_by` / `reviewed_at` server-side        |
+| `payroll_summary(month)` | Computes the payroll table                              |
+| `dashboard_stats()`      | Aggregates for the admin dashboard                      |
 
 `payroll_summary` is deliberately `SECURITY INVOKER`: RLS on `employees`
 decides whose rows come back. An admin gets everyone, an employee gets exactly
@@ -82,16 +82,16 @@ one row, and the client does no filtering. The same RPC powers both
 
 Policies are built on `SECURITY DEFINER` helpers — `current_employee_id()`,
 `is_admin()`, `manages_employee()`. These exist specifically so that a policy
-*on* `employees` can query `employees` without infinite recursion, which is the
+_on_ `employees` can query `employees` without infinite recursion, which is the
 standard trap when modelling roles this way.
 
-| Table | Employee | Manager | Admin |
-|---|---|---|---|
-| `employees` | read + edit own (name, phone only) | read direct reports | full |
-| `leave_requests` | read/create own, edit or withdraw while pending | approve/reject reports | full |
-| `attendance` | read/write own | read team | full |
-| `departments` | read | read | full |
-| `leave_balances` | read own | read team | full |
+| Table            | Employee                                        | Manager                | Admin |
+| ---------------- | ----------------------------------------------- | ---------------------- | ----- |
+| `employees`      | read + edit own (name, phone only)              | read direct reports    | full  |
+| `leave_requests` | read/create own, edit or withdraw while pending | approve/reject reports | full  |
+| `attendance`     | read/write own                                  | read team              | full  |
+| `departments`    | read                                            | read                   | full  |
+| `leave_balances` | read own                                        | read team              | full  |
 
 ### Verified behaviour
 
@@ -99,25 +99,25 @@ These were tested by simulating a session in Postgres
 (`set local role authenticated` + a forged JWT claim), not just read off the
 policy text:
 
-| Probe | Result |
-|---|---|
-| Employee sees only their own row in `employees` | 1 row |
-| Employee raises their own salary | blocked (`42501`) |
-| Employee promotes themselves to admin | blocked (`42501`) |
-| Employee edits another person's record | blocked |
-| Employee edits their own name/phone | allowed |
-| Employee approves their own leave | blocked |
-| Employee withdraws their own pending request | allowed |
-| Manager approves a direct report's leave | allowed, balance decremented, reviewer stamped |
-| Employee calls `payroll_summary` | 1 row (their own) |
+| Probe                                           | Result                                         |
+| ----------------------------------------------- | ---------------------------------------------- |
+| Employee sees only their own row in `employees` | 1 row                                          |
+| Employee raises their own salary                | blocked (`42501`)                              |
+| Employee promotes themselves to admin           | blocked (`42501`)                              |
+| Employee edits another person's record          | blocked                                        |
+| Employee edits their own name/phone             | allowed                                        |
+| Employee approves their own leave               | blocked                                        |
+| Employee withdraws their own pending request    | allowed                                        |
+| Manager approves a direct report's leave        | allowed, balance decremented, reviewer stamped |
+| Employee calls `payroll_summary`                | 1 row (their own)                              |
 
 **Two real bugs were found and fixed during that testing**, both in migration
 `hrms_fix_leave_policy_holes`:
 
 1. **Self-approval was possible.** The original `leave_update_own` policy
-   checked in `USING` that the *old* row was pending, but its `WITH CHECK`
+   checked in `USING` that the _old_ row was pending, but its `WITH CHECK`
    only verified ownership — so an employee could `update ... set status =
-   'approved'` on their own request. The fix constrains the *new* status to
+'approved'` on their own request. The fix constrains the _new_ status to
    `pending` or `cancelled`, leaving `approved`/`rejected` reachable only
    through the manager and admin policies.
 
@@ -133,7 +133,7 @@ employee briefly showed 31 unpaid days and negative net pay. The fix guards
 the sum with `case when lr.id is null then 0`.
 
 The first is the more instructive one: `USING` filters which existing rows an
-update can *see*, while `WITH CHECK` validates the row it *becomes*. Getting
+update can _see_, while `WITH CHECK` validates the row it _becomes_. Getting
 only the first half right is a common and quiet mistake.
 
 ---
