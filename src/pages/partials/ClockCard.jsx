@@ -70,7 +70,7 @@ export default function ClockCard() {
             ? "On approved leave"
             : checkIn.isPending
               ? "Checking in…"
-              : "Check in"}
+              : "Check out"}
         </button>
       ) : (
         <button className="btn btn-clock btn-block" disabled>
