@@ -5,25 +5,29 @@
    ============================================================ */
 :root {
   --pine-900: #10302b;
-  --pine-700: #1f4d46;
-  --pine-500: #2f6f64;
-  --pine-100: #dfeae7;
+  --pine-700: #23594f;
+  --pine-500: #3f8f7f;
+  --pine-300: #7dc4b3;
+  --pine-100: #1a352d;
   --pine-050: #f0f6f4;
 
-  --amber-600: #a9700f;
-  --amber-100: #fbeed3;
-  --rose-600: #a63a3a;
-  --rose-100: #f8e2e2;
-  --green-600: #1f7a5c;
-  --green-100: #dcf0e8;
+  --amber-600: #d69a3d;
+  --amber-100: #3a2c14;
+  --gold-500: #feb957;
+  --rose-600: #e2827e;
+  --rose-100: #3a1f1e;
+  --green-600: #5cc9a3;
+  --green-100: #163429;
 
-  --ink: #16211f;
-  --ink-2: #4a5a57;
-  --ink-3: #7d8c89;
-  --line: #dfe4e2;
-  --line-2: #eceeed;
-  --canvas: #f4f6f5;
-  --surface: #ffffff;
+  --ink: #eaf1ee;
+  --ink-2: white;
+  --ink-3: #758a82;
+  --line: #22352e;
+  --line-2: #2f7860;
+  --canvas: #0b1815;
+  --surface: #132621;
+  --surface-2: #1b342c;
+  --focus-ring: rgba(63, 143, 127, 0.35);
 
   --display: "Bricolage Grotesque", system-ui, sans-serif;
   --body: "IBM Plex Sans", system-ui, sans-serif;
@@ -32,8 +36,8 @@
   --r-sm: 4px;
   --r: 8px;
   --r-lg: 12px;
-  --shadow: 0 1px 2px rgba(16, 48, 43, 0.06), 0 4px 12px rgba(16, 48, 43, 0.04);
-  --shadow-lg: 0 8px 32px rgba(16, 48, 43, 0.14);
+  --shadow: 0 1px 2px rgba(0, 0, 0, 0.24), 0 4px 16px rgba(0, 0, 0, 0.28);
+  --shadow-lg: 0 12px 40px rgba(0, 0, 0, 0.45);
 
   --sidebar-w: 236px;
 }
@@ -262,7 +266,7 @@ h3 {
   height: 30px;
   border-radius: 50%;
   background: var(--pine-100);
-  color: var(--pine-700);
+  color: var(--pine-300);
   display: grid;
   place-items: center;
   font-family: var(--mono);
@@ -379,14 +383,14 @@ h3 {
   border-color: transparent;
 }
 .btn-danger:hover:not(:disabled) {
-  background: #f2d2d2;
+  background: #4c2624;
 }
 .btn-ok {
   background: var(--green-100);
   color: var(--green-600);
 }
 .btn-ok:hover:not(:disabled) {
-  background: #cbe8dd;
+  background: #1d4436;
 }
 .btn-sm {
   height: 29px;
@@ -431,7 +435,7 @@ h3 {
 }
 .badge.manager {
   background: var(--pine-100);
-  color: var(--pine-700);
+  color: var(--pine-300);
 }
 
 /* ---------- forms ---------- */
@@ -462,7 +466,7 @@ h3 {
 .textarea:focus {
   border-color: var(--pine-500);
   outline: none;
-  box-shadow: 0 0 0 3px var(--pine-050);
+  box-shadow: 0 0 0 3px var(--focus-ring);
 }
 .textarea {
   height: auto;
@@ -515,7 +519,7 @@ table.tbl {
   border-bottom: none;
 }
 .tbl tbody tr:hover {
-  background: var(--pine-050);
+  background: var(--surface-2);
 }
 .tbl .num {
   text-align: right;
@@ -531,6 +535,20 @@ table.tbl {
   align-items: center;
   gap: 10px;
   min-width: 0;
+}
+.person-avatar {
+  flex: none;
+  width: 30px;
+  height: 30px;
+  border-radius: 50%;
+  background: #76FF7A;
+  color: #14532d;
+  font-size: 11.5px;
+  font-weight: 700;
+  letter-spacing: 0.02em;
+  display: flex;
+  align-items: center;
+  justify-content: center;
 }
 .person .nm {
   font-weight: 600;
@@ -604,7 +622,7 @@ table.tbl {
 }
 .muster-cell.partial {
   background: var(--pine-100);
-  color: var(--pine-700);
+  color: var(--pine-300);
 }
 .muster-cell.leave {
   background: var(--amber-100);
@@ -758,7 +776,7 @@ table.tbl {
   padding: 48px;
 }
 .skeleton {
-  background: linear-gradient(90deg, var(--line-2), #f7f8f8, var(--line-2));
+  background: linear-gradient(90deg, var(--line-2), var(--surface-2), var(--line-2));
   background-size: 200% 100%;
   animation: sh 1.3s infinite;
   border-radius: var(--r-sm);
@@ -901,6 +919,20 @@ table.tbl {
   letter-spacing: -0.01em;
   color: #fff;
 }
+.auth-brand-icon span {
+  color: var(--gold-500);
+}
+.auth-form-header h1 {
+  color: var(--ink);
+}
+.auth-form-header .eyebrow {
+  color: var(--amber-600);
+  font-weight: 700;
+}
+.auth-link {
+  color: var(--amber-600);
+  font-weight: 600;
+}
 
 .auth-aside h1 {
   font-size: 44px;
@@ -981,14 +1013,38 @@ table.tbl {
   margin-top: 2px;
 }
 
+.auth-aside .muster-legend {
+  color: #a8c4bf;
+}
+.auth-aside .muster-cell {
+  background: rgba(255, 255, 255, 0.08);
+  color: #a8c4bf;
+}
+.auth-aside .muster-cell.present {
+  background: var(--pine-500);
+  color: #fff;
+}
+.auth-aside .muster-cell.partial {
+  background: rgba(161, 208, 198, 0.3);
+  color: #e8f2f0;
+}
+.auth-aside .muster-cell.leave {
+  background: rgba(254, 185, 87, 0.28);
+  color: #ffe3ae;
+}
+.auth-aside .muster-cell.weekend {
+  border-color: rgba(255, 255, 255, 0.18);
+  color: rgba(255, 255, 255, 0.3);
+}
+
 .auth-main {
   display: flex;
   align-items: center;
   justify-content: center;
   padding: 48px 32px;
-  background: #ffffff;
+  background: var(--surface);
   position: relative;
-  box-shadow: -10px 0 30px rgba(16, 48, 43, 0.04);
+  box-shadow: -10px 0 30px rgba(0, 0, 0, 0.2);
 }
 .auth-form-wrap {
   width: 100%;
@@ -1004,7 +1060,7 @@ table.tbl {
   font-family: var(--display);
   font-weight: 700;
   font-size: 18px;
-  color: var(--pine-900);
+  color: var(--ink);
 }
 .auth-form {
   width: 100%;

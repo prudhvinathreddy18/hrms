@@ -31,10 +31,18 @@ export function Badge({ children, kind = "" }) {
 
 
 
+function initials(name) {
+  if (!name) return "";
+  const parts = name.trim().split(/\s+/);
+  const first = parts[0]?.[0] ?? "";
+  const last = parts.length > 1 ? parts[parts.length - 1][0] : "";
+  return (first + last).toUpperCase();
+}
+
 export function Person({ name, sub }) {
   return (
     <div className="person">
-
+      <div className="person-avatar">{initials(name)}</div>
       <div>
         <div className="nm">{name}</div>
         {sub && <div className="sub">{sub}</div>}
@@ -84,6 +92,48 @@ export function Modal({ title, subtitle, onClose, children }) {
         </div>
         <div className="modal-body">{children}</div>
       </div>
+    </div>
+  );
+}
+
+export function MusterStrip({ cells }) {
+  return (
+    <div className="muster">
+      {cells.map((c) => (
+        <div
+          key={c.key}
+          className={`muster-cell ${c.status}${c.today ? " today" : ""}`}
+          title={c.title}
+        >
+          {c.label}
+        </div>
+      ))}
+    </div>
+  );
+}
+
+export function MusterLegend() {
+  return (
+    <div className="muster-legend">
+      <span>
+        <i className="swatch" style={{ background: "var(--pine-700)" }} />
+        Present
+      </span>
+      <span>
+        <i className="swatch" style={{ background: "var(--pine-100)" }} />
+        Partial
+      </span>
+      <span>
+        <i className="swatch" style={{ background: "var(--amber-100)" }} />
+        Leave
+      </span>
+      <span>
+        <i
+          className="swatch"
+          style={{ background: "transparent", border: "1px dashed var(--line)" }}
+        />
+        Weekend
+      </span>
     </div>
   );
 }

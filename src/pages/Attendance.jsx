@@ -1,9 +1,22 @@
 import { useState } from "react";
-import { format, subDays, startOfMonth, endOfMonth } from "date-fns";
+import {
+  format,
+  subDays,
+  startOfMonth,
+  endOfMonth,
+  eachDayOfInterval,
+} from "date-fns";
 import { useAuth } from "../contexts/AuthContext";
 import { useMyAttendance } from "../hooks/useAttendance";
 import ClockCard from "./partials/ClockCard";
-import { Spinner, Empty, Stat, ErrorBox } from "../ui/Bits";
+import {
+  Spinner,
+  Empty,
+  Stat,
+  ErrorBox,
+  MusterStrip,
+  MusterLegend,
+} from "../ui/Bits";
 import { dateOnly, clock } from "../lib/format";
 
 export default function Attendance() {
@@ -12,20 +25,42 @@ export default function Attendance() {
 
   const to = new Date();
   const from =
-    range === "month"
-      ? startOfMonth(to)
-      : subDays(to, Number(range) - 1);
+    range === "month" ? startOfMonth(to) : subDays(to, Number(range) - 1);
   const rangeEnd = range === "month" ? endOfMonth(to) : to;
 
   const { data, isLoading, error } = useMyAttendance(
     employee?.id,
     format(from, "yyyy-MM-dd"),
-    format(rangeEnd, "yyyy-MM-dd")
+    format(rangeEnd, "yyyy-MM-dd"),
   );
 
-  const totalHours = (data ?? []).reduce((s, r) => s + Number(r.hours_worked || 0), 0);
+  const totalHours = (data ?? []).reduce(
+    (s, r) => s + Number(r.hours_worked || 0),
+    0,
+  );
   const daysPresent = (data ?? []).filter((r) => r.check_in).length;
   const avg = daysPresent ? (totalHours / daysPresent).toFixed(1) : "0";
+
+  const todayISOStr = format(new Date(), "yyyy-MM-dd");
+  const byDate = new Map((data ?? []).map((r) => [r.work_date, r]));
+  const musterCells = eachDayOfInterval({ start: from, end: rangeEnd })
+    .slice(-42)
+    .map((d) => {
+      const iso = format(d, "yyyy-MM-dd");
+      const record = byDate.get(iso);
+      const dow = d.getDay();
+      let status = "";
+      if (record?.check_in && record?.check_out) status = "present";
+      else if (record?.check_in) status = "partial";
+      else if (dow === 0 || dow === 6) status = "weekend";
+      return {
+        key: iso,
+        status,
+        today: iso === todayISOStr,
+        label: format(d, "d"),
+        title: `${format(d, "EEE d MMM")} — ${status || "no record"}`,
+      };
+    });
 
   return (
     <>
@@ -35,7 +70,12 @@ export default function Attendance() {
           <h1>Attendance</h1>
         </div>
         <div className="actions">
-          <select className="select" value={range} onChange={(e) => setRange(e.target.value)} style={{ width: 160 }}>
+          <select
+            className="select"
+            value={range}
+            onChange={(e) => setRange(e.target.value)}
+            style={{ width: 160 }}
+          >
             <option value="14">Last 14 days</option>
             <option value="30">Last 30 days</option>
             <option value="90">Last 90 days</option>
@@ -44,24 +84,39 @@ export default function Attendance() {
         </div>
       </div>
 
-      <div className="grid g2" style={{ gridTemplateColumns: "1fr 1.2fr", marginBottom: 16 }}>
+      <div
+        className="grid g2"
+        style={{ gridTemplateColumns: "1fr 1.2fr", marginBottom: 16 }}
+      >
         <ClockCard />
         <div className="grid g2" style={{ alignContent: "start" }}>
-          <Stat label="Days present" value={daysPresent} sub="In selected range" />
-          <Stat label="Hours logged" value={totalHours.toFixed(1)} sub="Check-in to check-out" />
+          <Stat
+            label="Days present"
+            value={daysPresent}
+            sub="In selected range"
+          />
+          <Stat
+            label="Hours logged"
+            value={totalHours.toFixed(1)}
+            sub="Check-in to check-out"
+          />
           <Stat label="Average day" value={`${avg}h`} sub="Per day present" />
           <Stat label="Records" value={data?.length ?? 0} sub="Rows on file" />
         </div>
       </div>
 
       <div className="card">
-        <div className="card-head"><h2>Daily log</h2></div>
+        <div className="card-head">
+          <h2>Daily log</h2>
+        </div>
         {error ? (
           <ErrorBox error={error} />
         ) : isLoading ? (
           <Spinner />
         ) : !data?.length ? (
-          <Empty title="No entries yet">Check in from the time clock above to start your record.</Empty>
+          <Empty title="No entries yet">
+            Check in from the time clock above to start your record.
+          </Empty>
         ) : (
           <div className="table-wrap">
             <table className="tbl">
@@ -82,7 +137,11 @@ export default function Attendance() {
                     <td className="mono">{clock(r.check_out)}</td>
                     <td className="num">{r.hours_worked ?? "—"}</td>
                     <td className="small dim">
-                      {r.check_out ? "Complete" : r.check_in ? "Open — no check-out" : "—"}
+                      {r.check_out
+                        ? "Complete"
+                        : r.check_in
+                          ? "Open — no check-out"
+                          : "—"}
                     </td>
                   </tr>
                 ))}

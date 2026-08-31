@@ -52,20 +52,12 @@ export default function Employees() {
         <div className="card-head">
           <div className="row" style={{ flex: 1 }}>
             <div
-              style={{ position: "relative", flex: "1 1 220px", maxWidth: 300 }}
+              className="input-icon-wrap"
+              style={{ flex: "1 1 220px", maxWidth: 300 }}
             >
-              <Search
-                size={15}
-                style={{
-                  position: "absolute",
-                  left: 10,
-                  top: 10,
-                  color: "var(--ink-3)",
-                }}
-              />
+              <Search size={15} className="input-icon" />
               <input
-                className="input"
-                style={{ paddingLeft: 32 }}
+                className="input input--icon"
                 placeholder="Search name or email"
                 value={search}
                 onChange={(e) => setSearch(e.target.value)}
@@ -104,7 +96,7 @@ export default function Employees() {
                 value={role}
                 onChange={(e) => setRole(e.target.value)}
               >
-                <option value="">All roles</option>=
+                <option value="">All roles</option>
                 <option value="manager">Manager</option>
                 <option value="employee">Employee</option>
               </select>
@@ -173,8 +165,11 @@ export default function Employees() {
                     <td className="small muted">{e.department?.name ?? "—"}</td>
                     <td className="small muted">{e.designation ?? "—"}</td>
                     <td className="small muted">
-                      {data?.find((d) => d.id === e.manager_id)?.full_name ??
-                        "—"}
+                      {e.role === "manager"
+                        ? "Admin"
+                        : e.role === "admin"
+                        ? "—"
+                        : (e.manager?.full_name ?? "—")}
                     </td>
                     <td>
                       <Badge kind={e.role}>{e.role}</Badge>

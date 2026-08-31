@@ -3,7 +3,7 @@ import { supabase } from "../lib/supabase";
 export async function getEmployees({ search = "", departmentId = "", role = "" } = {}) {
   let q = supabase
     .from("employees")
-    .select("*, department:departments!employees_department_id_fkey(id, name), manager:employees!manager_id(id, full_name)")
+    .select("*, department:departments!employees_department_id_fkey(id, name), manager:manager_id(id, full_name)")
     .order("full_name");
 
   if (search) {
@@ -30,7 +30,7 @@ export async function getEmployees({ search = "", departmentId = "", role = "" }
 export async function getEmployee(id) {
   const { data, error } = await supabase
     .from("employees")
-    .select("*, department:departments!employees_department_id_fkey(id, name), manager:employees!manager_id(id, full_name)")
+    .select("*, department:departments!employees_department_id_fkey(id, name), manager:manager_id(id, full_name)")
     .eq("id", id)
     .single();
   if (error) throw new Error(error.message);

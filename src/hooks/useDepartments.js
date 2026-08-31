@@ -6,6 +6,7 @@ import {
   updateDepartment,
   deleteDepartment,
 } from "../services/apiDepartments";
+import { employeeKeys } from "./useEmployees";
 
 export function useDepartments() {
   return useQuery({ queryKey: ["departments"], queryFn: getDepartments });
@@ -35,6 +36,7 @@ export function useUpdateDepartment() {
           : old,
       );
       qc.invalidateQueries({ queryKey: ["departments"] });
+      qc.invalidateQueries({ queryKey: employeeKeys.all });
     },
     onError: (e) => toast.error(e.message),
   });
@@ -47,6 +49,7 @@ export function useDeleteDepartment() {
     onSuccess: () => {
       toast.success("Department removed");
       qc.invalidateQueries({ queryKey: ["departments"] });
+      qc.invalidateQueries({ queryKey: employeeKeys.all });
     },
     onError: (e) => toast.error(e.message),
   });

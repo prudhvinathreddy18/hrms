@@ -6,10 +6,14 @@ import { clock, todayISO } from "../lib/format";
 export default function TeamAttendance() {
   const [date, setDate] = useState(todayISO());
   const { data, isLoading, error } = useTeamAttendance(date);
+  console.log(data);
 
   const complete = (data ?? []).filter((r) => r.check_out).length;
   const open = (data ?? []).filter((r) => r.check_in && !r.check_out).length;
-  const hours = (data ?? []).reduce((s, r) => s + Number(r.hours_worked || 0), 0);
+  const hours = (data ?? []).reduce(
+    (s, r) => s + Number(r.hours_worked || 0),
+    0,
+  );
 
   return (
     <>
@@ -19,21 +23,37 @@ export default function TeamAttendance() {
           <h1>Attendance</h1>
         </div>
         <div className="actions">
-          <input className="input" type="date" value={date} onChange={(e) => setDate(e.target.value)} style={{ width: 170 }} />
+          <input
+            className="input"
+            type="date"
+            value={date}
+            onChange={(e) => setDate(e.target.value)}
+            style={{ width: 170 }}
+          />
         </div>
       </div>
 
       <div className="grid g4" style={{ marginBottom: 16 }}>
         <Stat label="Checked in" value={data?.length ?? 0} sub="On this date" />
-        <Stat label="Completed days" value={complete} sub="Checked in and out" />
+        <Stat
+          label="Completed days"
+          value={complete}
+          sub="Checked in and out"
+        />
         <Stat label="Still open" value={open} sub="No check-out yet" />
-        <Stat label="Total hours" value={hours.toFixed(1)} sub="Across the team" />
+        <Stat
+          label="Total hours"
+          value={hours.toFixed(1)}
+          sub="Across the team"
+        />
       </div>
 
       <div className="card">
         <div className="card-head">
           <h2>Roll for {date}</h2>
-          <div className="actions"><span className="mono small dim">{data?.length ?? 0} rows</span></div>
+          <div className="actions">
+            <span className="mono small dim">{data?.length ?? 0} rows</span>
+          </div>
         </div>
 
         {error ? (
@@ -60,8 +80,15 @@ export default function TeamAttendance() {
               <tbody>
                 {data.map((r) => (
                   <tr key={r.id}>
-                    <td><Person name={r.employee?.full_name ?? "—"} sub={r.employee?.email} /></td>
-                    <td className="small muted">{r.employee?.department?.name ?? "—"}</td>
+                    <td>
+                      <Person
+                        name={r.employee?.full_name ?? "—"}
+                        sub={r.employee?.email}
+                      />
+                    </td>
+                    <td className="small muted">
+                      {r.employee?.department?.name ?? "—"}
+                    </td>
                     <td className="mono">{clock(r.check_in)}</td>
                     <td className="mono">{clock(r.check_out)}</td>
                     <td className="num">{r.hours_worked ?? "—"}</td>

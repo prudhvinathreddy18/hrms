@@ -1,5 +1,13 @@
 import { Link } from "react-router-dom";
-import { BarChart, Bar, XAxis, YAxis, Tooltip, ResponsiveContainer, CartesianGrid } from "recharts";
+import {
+  BarChart,
+  Bar,
+  XAxis,
+  YAxis,
+  Tooltip,
+  ResponsiveContainer,
+  CartesianGrid,
+} from "recharts";
 import { useAuth } from "../contexts/AuthContext";
 import { useDashboardStats } from "../hooks/usePayroll";
 import { useLeaveRequests, useLeaveBalances } from "../hooks/useLeave";
@@ -24,26 +32,35 @@ export default function Dashboard() {
     <>
       <div className="page-head">
         <div>
-          <div className="eyebrow">Today · {format(new Date(), "EEEE d MMMM")}</div>
+          <div className="eyebrow">
+            Today · {format(new Date(), "EEEE d MMMM")}
+          </div>
           <h1>Dashboard</h1>
         </div>
       </div>
 
-      <div className="grid g2" style={{ gridTemplateColumns: "1.1fr 1fr", marginBottom: 16 }}>
+      <div
+        className="grid g2"
+        style={{ gridTemplateColumns: "1.1fr 1fr", marginBottom: 16 }}
+      >
         <ClockCard />
 
         <div className="card">
           <div className="card-head">
             <h2>Leave balance</h2>
             <div className="actions">
-              <Link to="/leave" className="btn btn-ghost btn-sm">Apply</Link>
+              <Link to="/leave" className="btn btn-ghost btn-sm">
+                Apply
+              </Link>
             </div>
           </div>
           <div className="card-body">
             {!balances ? (
               <Spinner />
             ) : balances.length === 0 ? (
-              <Empty title="No allocation yet">Your leave quota hasn't been set.</Empty>
+              <Empty title="No allocation yet">
+                Your leave quota hasn't been set.
+              </Empty>
             ) : (
               balances.map((b) => {
                 const left = Number(b.allocated) - Number(b.used);
@@ -52,7 +69,9 @@ export default function Dashboard() {
                   <div className="bal" key={b.id}>
                     <div className="bal-top">
                       <span className="bal-name">{b.ltype}</span>
-                      <span className="bal-num">{left} of {b.allocated} left</span>
+                      <span className="bal-num">
+                        {left} of {b.allocated} left
+                      </span>
                     </div>
                     <div className="bar">
                       <i
@@ -70,10 +89,30 @@ export default function Dashboard() {
 
       {isAdmin && stats && (
         <div className="grid g4" style={{ marginBottom: 16 }}>
-          <Stat label="Headcount" value={stats.total_employees} sub={`${stats.total_departments} departments`} />
-          <Stat label="Present today" value={stats.present_today} sub={`${attendanceRate}% of headcount`} />
-          <Stat label="Pending approvals" value={stats.pending_leaves} sub="Awaiting a decision" />
-          <Stat label="Departments" value={stats.total_departments} sub="Active cost centres" />
+          <Stat
+            label="Headcount"
+            value={stats.total_employees}
+            sub="Active employees"
+          />
+          <Stat
+            label="Present today"
+            value={stats.present_today}
+            sub={`${attendanceRate}% of headcount`}
+          />
+          <Stat
+            label="Pending approvals"
+            value={stats.pending_leaves}
+            sub="Awaiting a decision"
+          />
+          <Stat
+            label="Departments"
+            value={stats.total_departments}
+            sub={`~${
+              stats.total_departments
+                ? Math.round(stats.total_employees / stats.total_departments)
+                : 0
+            } people per team`}
+          />
         </div>
       )}
 
@@ -83,14 +122,20 @@ export default function Dashboard() {
             <h2>My recent requests</h2>
           </div>
           {!myLeave?.length ? (
-            <Empty title="Nothing on file">You haven't applied for leave yet.</Empty>
+            <Empty title="Nothing on file">
+              You haven't applied for leave yet.
+            </Empty>
           ) : (
             <div className="table-wrap">
               <table className="tbl">
                 <tbody>
                   {myLeave.slice(0, 5).map((r) => (
                     <tr key={r.id}>
-                      <td style={{ textTransform: "capitalize", fontWeight: 600 }}>{r.leave_type}</td>
+                      <td
+                        style={{ textTransform: "capitalize", fontWeight: 600 }}
+                      >
+                        {r.leave_type}
+                      </td>
                       <td className="mono small dim">
                         {dayMonth(r.start_date)} – {dayMonth(r.end_date)}
                       </td>
@@ -112,12 +157,44 @@ export default function Dashboard() {
             </div>
             <div className="card-body" style={{ height: 240 }}>
               <ResponsiveContainer width="100%" height="100%">
-                <BarChart data={stats.by_department} margin={{ left: -22, right: 6 }}>
-                  <CartesianGrid strokeDasharray="2 4" stroke="var(--line)" vertical={false} />
-                  <XAxis dataKey="department" tick={{ fontSize: 10, fill: "var(--ink-3)" }} interval={0} angle={-30} textAnchor="end" height={60} />
-                  <YAxis tick={{ fontSize: 10, fill: "var(--ink-3)" }} allowDecimals={false} />
-                  <Tooltip contentStyle={{ borderRadius: 8, border: "1px solid var(--line)", fontSize: 12 }} />
-                  <Bar dataKey="count" fill="var(--pine-700)" radius={[3, 3, 0, 0]} />
+                <BarChart
+                  data={stats.by_department}
+                  margin={{ left: -22, right: 6 }}
+                >
+                  <CartesianGrid
+                    strokeDasharray="2 4"
+                    stroke="var(--line)"
+                    vertical={false}
+                  />
+                  <XAxis
+                    dataKey="department"
+                    tick={{ fontSize: 10, fill: "var(--ink-3)" }}
+                    interval={0}
+                    angle={-30}
+                    textAnchor="end"
+                    height={60}
+                  />
+                  <YAxis
+                    tick={{ fontSize: 10, fill: "var(--ink-3)" }}
+                    allowDecimals={false}
+                  />
+                  <Tooltip
+                    cursor={{ fill: "var(--surface-2)" }}
+                    contentStyle={{
+                      borderRadius: 8,
+                      border: "1px solid var(--line)",
+                      background: "var(--surface)",
+                      color: "var(--ink)",
+                      fontSize: 12,
+                    }}
+                    labelStyle={{ color: "var(--ink)" }}
+                    itemStyle={{ color: "var(--ink-2)" }}
+                  />
+                  <Bar
+                    dataKey="count"
+                    fill="var(--pine-500)"
+                    radius={[3, 3, 0, 0]}
+                  />
                 </BarChart>
               </ResponsiveContainer>
             </div>
@@ -127,18 +204,24 @@ export default function Dashboard() {
             <div className="card-head">
               <h2>Waiting on you</h2>
               <div className="actions">
-                <Link to="/leave/approvals" className="btn btn-ghost btn-sm">Review</Link>
+                <Link to="/leave/approvals" className="btn btn-ghost btn-sm">
+                  Review
+                </Link>
               </div>
             </div>
             {!pending?.length ? (
-              <Empty title="All clear">No requests are waiting for a decision.</Empty>
+              <Empty title="All clear">
+                No requests are waiting for a decision.
+              </Empty>
             ) : (
               <div className="table-wrap">
                 <table className="tbl">
                   <tbody>
                     {pending.slice(0, 5).map((r) => (
                       <tr key={r.id}>
-                        <td style={{ fontWeight: 600 }}>{r.employee?.full_name}</td>
+                        <td style={{ fontWeight: 600 }}>
+                          {r.employee?.full_name}
+                        </td>
                         <td className="mono small dim">
                           {dayMonth(r.start_date)} – {dayMonth(r.end_date)}
                         </td>

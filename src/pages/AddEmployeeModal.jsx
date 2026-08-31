@@ -60,7 +60,10 @@ function AddEmployeeModal({ departments, onClose }) {
                   setForm({
                     ...form,
                     department_id: e.target.value,
-                    manager_id: dept?.manager_id ?? "",
+                    manager_id:
+                      form.role === "manager" || form.role === "admin"
+                        ? ""
+                        : dept?.manager_id ?? "",
                   });
                 }}
               >
@@ -88,8 +91,12 @@ function AddEmployeeModal({ departments, onClose }) {
                 className="input"
                 disabled
                 value={
-                  departments.find((d) => d.id === form.department_id)?.manager
-                    ?.full_name ?? "No manager assigned"
+                  form.role === "manager"
+                    ? "Admin"
+                    : form.role === "admin"
+                    ? "—"
+                    : (departments.find((d) => d.id === form.department_id)?.manager
+                        ?.full_name ?? "No manager assigned")
                 }
               />
             </Field>
@@ -97,7 +104,18 @@ function AddEmployeeModal({ departments, onClose }) {
               <select
                 className="select"
                 value={form.role}
-                onChange={set("role")}
+                onChange={(e) => {
+                  const role = e.target.value;
+                  const dept = departments.find((d) => d.id === form.department_id);
+                  setForm({
+                    ...form,
+                    role,
+                    manager_id:
+                      role === "manager" || role === "admin"
+                        ? ""
+                        : dept?.manager_id ?? "",
+                  });
+                }}
               >
                 <option value="employee">Employee</option>
                 <option value="manager">Manager</option>

@@ -64,12 +64,26 @@ export default function EmployeeDetail() {
       dept?.manager && String(dept.manager.id) !== String(id)
         ? dept.manager
         : null;
-    setForm({ ...form, department_id, manager_id: manager?.id ?? "" });
+    setForm({
+      ...form,
+      department_id,
+      manager_id:
+        form.role === "manager" || form.role === "admin"
+          ? ""
+          : manager?.id ?? "",
+    });
   }
 
   function save(e) {
     e.preventDefault();
-    update.mutate({ id, ...form });
+    const payload = {
+      ...form,
+      manager_id:
+        form.role === "manager" || form.role === "admin"
+          ? null
+          : form.manager_id || null,
+    };
+    update.mutate({ id, ...payload });
   }
 
   const pendingCount = (leaves ?? []).filter(
@@ -178,18 +192,24 @@ export default function EmployeeDetail() {
                   </select>
                 </Field>
                 <Field label="Reports to">
-                  <select
-                    className="select"
-                    value={form.manager_id}
-                    onChange={set("manager_id")}
-                  >
-                    <option value="">No manager assigned</option>
-                    {deptManager && (
-                      <option value={deptManager.id}>
-                        {deptManager.full_name}
-                      </option>
-                    )}
-                  </select>
+                  {form.role === "manager" ? (
+                    <input className="input" disabled value="Admin" />
+                  ) : form.role === "admin" ? (
+                    <input className="input" disabled value="—" />
+                  ) : (
+                    <select
+                      className="select"
+                      value={form.manager_id}
+                      onChange={set("manager_id")}
+                    >
+                      <option value="">No manager assigned</option>
+                      {deptManager && (
+                        <option value={deptManager.id}>
+                          {deptManager.full_name}
+                        </option>
+                      )}
+                    </select>
+                  )}
                 </Field>
               </div>
 

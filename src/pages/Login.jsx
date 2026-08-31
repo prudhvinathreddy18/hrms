@@ -4,7 +4,24 @@ import { useMutation } from "@tanstack/react-query";
 import toast from "react-hot-toast";
 import { login } from "../services/apiAuth";
 import { useAuth } from "../contexts/AuthContext";
-import { Field } from "../ui/Bits";
+import { Field, MusterStrip, MusterLegend } from "../ui/Bits";
+
+const PREVIEW_STATUSES = [
+  "present",
+  "present",
+  "present",
+  "weekend",
+  "weekend",
+  "present",
+  "present",
+  "partial",
+  "present",
+  "leave",
+  "leave",
+  "weekend",
+  "weekend",
+  "present",
+];
 
 export default function Login() {
   const [email, setEmail] = useState("");
@@ -41,6 +58,11 @@ export default function Login() {
         <div className="auth-aside-content">
           {/* Header Brand */}
           <div className="auth-brand-lockup">
+            <div className="auth-brand-icon">
+              <span style={{ fontFamily: "var(--display)", fontWeight: 800 }}>
+                EMS
+              </span>
+            </div>
             <span className="auth-brand-text">Employee Management System</span>
           </div>
 
@@ -52,63 +74,11 @@ export default function Login() {
               on the record.
             </h1>
             <p className="auth-subtitle">
-              The trusted steward for enterprise workforce data, ensuring
-              accuracy, compliance, and clarity at scale.
+              Clock in, apply for leave, and keep one shared roll of who worked
+              when — the same record your whole team checks.
             </p>
 
-            {/* Stat Cards */}
-            <div className="auth-cards">
-              <div className="glass-card">
-                <div className="glass-card-icon-wrap glass-card-icon-wrap--gold">
-                  <svg
-                    width="20"
-                    height="20"
-                    viewBox="0 0 24 24"
-                    fill="none"
-                    stroke="#feb957"
-                    strokeWidth="2.5"
-                    strokeLinecap="round"
-                    strokeLinejoin="round"
-                  >
-                    <circle
-                      cx="12"
-                      cy="12"
-                      r="10"
-                      fill="rgba(254, 185, 87, 0.15)"
-                    />
-                    <path d="m9 12 2 2 4-4" />
-                  </svg>
-                </div>
-                <div>
-                  <span className="glass-card-label">System Health</span>
-                  <span className="glass-card-value">99.9% Uptime</span>
-                </div>
-              </div>
-
-              <div className="glass-card glass-card--offset">
-                <div className="glass-card-icon-wrap glass-card-icon-wrap--teal">
-                  <svg
-                    width="20"
-                    height="20"
-                    viewBox="0 0 24 24"
-                    fill="none"
-                    stroke="#a1d0c6"
-                    strokeWidth="2"
-                    strokeLinecap="round"
-                    strokeLinejoin="round"
-                  >
-                    <path d="M16 21v-2a4 4 0 0 0-4-4H6a4 4 0 0 0-4 4v2" />
-                    <circle cx="9" cy="7" r="4" />
-                    <path d="M22 21v-2a4 4 0 0 0-3-3.87" />
-                    <path d="M16 3.13a4 4 0 0 1 0 7.75" />
-                  </svg>
-                </div>
-                <div>
-                  <span className="glass-card-label">Active Personnel</span>
-                  <span className="glass-card-value">12,450</span>
-                </div>
-              </div>
-            </div>
+            {/* Signature: a real muster strip, not a stat card */}
           </div>
         </div>
       </aside>
@@ -119,34 +89,24 @@ export default function Login() {
           {/* Mobile Brand Header */}
           <div className="auth-mobile-header">
             <div className="auth-brand-icon auth-brand-icon--sm">
-              <svg
-                width="18"
-                height="18"
-                viewBox="0 0 24 24"
-                fill="none"
-                xmlns="http://www.w3.org/2000/svg"
+              <span
+                style={{
+                  fontFamily: "var(--display)",
+                  fontWeight: 800,
+                  color: "var(--amber-600)",
+                  fontSize: 13,
+                }}
               >
-                <path
-                  d="M12 3L4.5 7.2V12.8C4.5 17.5 7.7 21.8 12 23C16.3 21.8 19.5 17.5 19.5 12.8V7.2L12 3Z"
-                  stroke="#a9700f"
-                  strokeWidth="2"
-                  strokeLinecap="round"
-                  strokeLinejoin="round"
-                />
-              </svg>
+                M
+              </span>
             </div>
-            <span className="auth-mobile-title">EMS</span>
+            <span className="auth-mobile-title">Muster</span>
           </div>
 
           <form className="auth-form" onSubmit={submit}>
             <div className="auth-form-header">
-              <div
-                className="eyebrow"
-                style={{ color: "#a9700f", fontWeight: 700 }}
-              >
-                Sign in
-              </div>
-              <h1 style={{ marginTop: 6, color: "#10302b" }}>Welcome back</h1>
+              <div className="eyebrow">Sign in</div>
+              <h1 style={{ marginTop: 6 }}>Welcome back</h1>
               <p className="auth-form-sub">
                 Access your administrative dashboard.
               </p>
@@ -206,15 +166,6 @@ export default function Login() {
                   required
                 />
               </div>
-              <div style={{ textAlign: "right", marginTop: 4 }}>
-                <Link
-                  to="#"
-                  className="small"
-                  style={{ color: "#a9700f", fontWeight: 600 }}
-                >
-                  Forgot password?
-                </Link>
-              </div>
             </Field>
 
             <button
@@ -230,7 +181,7 @@ export default function Login() {
               style={{ textAlign: "center", marginTop: 8 }}
             >
               No account yet?{" "}
-              <Link to="/signup" style={{ color: "#a9700f", fontWeight: 600 }}>
+              <Link to="/signup" className="auth-link">
                 Request access
               </Link>
             </p>
