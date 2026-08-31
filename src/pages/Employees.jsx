@@ -25,10 +25,14 @@ export default function Employees() {
 
   const { data, isLoading, isPlaceholderData, error } = useEmployees({
     search,
-    departmentId: isManager ? (employee?.department_id ?? "") : departmentId,
+    departmentId: isManager ? "" : departmentId,
+    managerId: isManager ? (employee?.id ?? "") : "",
     role,
   });
   const { data: departments } = useDepartments({});
+  const managedDepartments = isManager
+    ? (departments ?? []).filter((d) => d.manager_id === employee?.id)
+    : [];
 
   return (
     <>
@@ -64,14 +68,11 @@ export default function Employees() {
               />
             </div>
             {isManager ? (
-              <select
-                className="select"
-                style={{ width: 180 }}
-                value={employee?.department_id ?? ""}
-                disabled
-              >
-                <option value={employee?.department_id ?? ""}>
-                  {employee?.department?.name ?? "My department"}
+              <select className="select" style={{ width: 180 }} value="" disabled>
+                <option value="">
+                  {managedDepartments.length
+                    ? managedDepartments.map((d) => d.name).join(", ")
+                    : "No department assigned"}
                 </option>
               </select>
             ) : (

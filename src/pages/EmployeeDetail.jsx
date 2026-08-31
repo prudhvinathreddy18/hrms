@@ -217,15 +217,22 @@ export default function EmployeeDetail() {
 
               <div className="grid g2" style={{ gap: 12 }}>
                 <Field label="Role">
-                  <select
-                    className="select"
-                    value={form.role}
-                    onChange={set("role")}
-                  >
-                    <option value="employee">Employee</option>
-                    <option value="manager">Manager</option>
-                    <option value="admin">Admin</option>
-                  </select>
+                  {form.role === "manager" ? (
+                    <input
+                      className="input"
+                      disabled
+                      value="Manager — assigned via Departments page"
+                    />
+                  ) : (
+                    <select
+                      className="select"
+                      value={form.role}
+                      onChange={set("role")}
+                    >
+                      <option value="employee">Employee</option>
+                      <option value="admin">Admin</option>
+                    </select>
+                  )}
                 </Field>
                 <Field label="Annual salary">
                   <input

@@ -1,6 +1,6 @@
 import { supabase } from "../lib/supabase";
 
-export async function getEmployees({ search = "", departmentId = "", role = "" } = {}) {
+export async function getEmployees({ search = "", departmentId = "", role = "", managerId = "" } = {}) {
   let q = supabase
     .from("employees")
     .select("*, department:departments!employees_department_id_fkey(id, name), manager:manager_id(id, full_name)")
@@ -20,7 +20,10 @@ export async function getEmployees({ search = "", departmentId = "", role = "" }
   }
   if (departmentId) q = q.eq("department_id", departmentId);
   if (role) q = q.eq("role", role);
-  
+  // a manager's roster is whoever reports to them, not whoever shares their
+  // own home department — those two can now differ (a manager can head a
+  // department other than the one they personally belong to)
+  if (managerId) q = q.or(`manager_id.eq.${managerId},id.eq.${managerId}`);
 
   const { data, error } = await q;
   if (error) throw new Error(error.message);
