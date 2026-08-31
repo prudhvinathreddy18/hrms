@@ -6,23 +6,6 @@ import { login } from "../services/apiAuth";
 import { useAuth } from "../contexts/AuthContext";
 import { Field, MusterStrip, MusterLegend } from "../ui/Bits";
 
-const PREVIEW_STATUSES = [
-  "present",
-  "present",
-  "present",
-  "weekend",
-  "weekend",
-  "present",
-  "present",
-  "partial",
-  "present",
-  "leave",
-  "leave",
-  "weekend",
-  "weekend",
-  "present",
-];
-
 export default function Login() {
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
@@ -59,7 +42,13 @@ export default function Login() {
           {/* Header Brand */}
           <div className="auth-brand-lockup">
             <div className="auth-brand-icon">
-              <span style={{ fontFamily: "var(--display)", fontWeight: 800 }}>
+              <span
+                style={{
+                  fontFamily: "var(--display)",
+                  fontWeight: 800,
+                  color: "#80ff00c1",
+                }}
+              >
                 EMS
               </span>
             </div>

@@ -37,7 +37,13 @@ export default function Signup() {
         <div className="auth-aside-content">
           <div className="auth-brand-lockup">
             <div className="auth-brand-icon">
-              <span style={{ fontFamily: "var(--display)", fontWeight: 800 }}>
+              <span
+                style={{
+                  fontFamily: "var(--display)",
+                  fontWeight: 800,
+                  color: "#80ff00c1",
+                }}
+              >
                 EMS
               </span>
             </div>

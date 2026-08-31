@@ -899,14 +899,14 @@ table.tbl {
   align-items: center;
   gap: 12px;
 }
-.auth-brand-icon {
+.auth-brand-icon {  
   width: 36px;
   height: 36px;
   display: grid;
   place-items: center;
   border-radius: var(--r);
-  background: rgba(254, 185, 87, 0.12);
-  border: 1px solid rgba(254, 185, 87, 0.25);
+  background: rgba(87, 254, 118, 0.12);
+  border: 1px solid rgba(87, 254, 115, 0.25);
 }
 .auth-brand-icon--sm {
   width: 30px;
