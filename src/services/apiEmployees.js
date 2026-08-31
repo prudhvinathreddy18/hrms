@@ -71,6 +71,11 @@ export async function deactivateEmployee(id) {
   if (error) throw new Error(error.message);
 }
 
+export async function deleteEmployee(id) {
+  const { error } = await supabase.from("employees").delete().eq("id", id);
+  if (error) throw new Error(error.message);
+}
+
 // empty strings would break uuid / numeric columns
 function clean(obj) {
   return Object.fromEntries(

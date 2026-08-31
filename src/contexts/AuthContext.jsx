@@ -2,6 +2,7 @@ import { createContext, useContext, useEffect, useState } from "react";
 import { useQueryClient } from "@tanstack/react-query";
 import { supabase } from "../lib/supabase";
 import { getMyEmployee } from "../services/apiAuth";
+import { employeeKeys } from "../hooks/useEmployees";
 
 const AuthContext = createContext(null);
 
@@ -51,6 +52,31 @@ export function AuthProvider({ children }) {
     };
   }, [queryClient]);
 
+  // Push live changes (e.g. an admin edit in another tab/device) into this
+  // client's cache instead of waiting for a window refocus or reload.
+  const isAuthenticated = Boolean(session);
+  useEffect(() => {
+    if (!isAuthenticated) return;
+
+    const channel = supabase
+      .channel("db-changes")
+      .on(
+        "postgres_changes",
+        { event: "*", schema: "public", table: "employees" },
+        () => queryClient.invalidateQueries({ queryKey: employeeKeys.all }),
+      )
+      .on(
+        "postgres_changes",
+        { event: "*", schema: "public", table: "departments" },
+        () => queryClient.invalidateQueries({ queryKey: ["departments"] }),
+      )
+      .subscribe();
+
+    return () => {
+      supabase.removeChannel(channel);
+    };
+  }, [isAuthenticated, queryClient]);
+
   async function refreshEmployee() {
     setEmployee(await getMyEmployee());
   }
@@ -67,7 +93,7 @@ export function AuthProvider({ children }) {
         isAdmin: role === "admin",
         isManager: role === "manager",
         canApprove: role === "admin" || role === "manager",
-        isAuthenticated: Boolean(session),
+        isAuthenticated,
         refreshEmployee,
       }}
     >

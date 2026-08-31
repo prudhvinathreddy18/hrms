@@ -6,6 +6,7 @@ import {
   createEmployee,
   updateEmployee,
   deactivateEmployee,
+  deleteEmployee,
 } from "../services/apiEmployees";
 
 export const employeeKeys = {
@@ -69,6 +70,20 @@ export function useDeactivateEmployee() {
     onSuccess: () => {
       toast.success("Employee deactivated");
       qc.invalidateQueries({ queryKey: employeeKeys.all });
+    },
+    onError: (e) => toast.error(e.message),
+  });
+}
+
+export function useDeleteEmployee() {
+  const qc = useQueryClient();
+  return useMutation({
+    mutationFn: deleteEmployee,
+    onSuccess: () => {
+      toast.success("Employee deleted");
+      qc.invalidateQueries({ queryKey: employeeKeys.all });
+      // deleting a manager clears departments.manager_id via ON DELETE SET NULL
+      qc.invalidateQueries({ queryKey: ["departments"] });
     },
     onError: (e) => toast.error(e.message),
   });

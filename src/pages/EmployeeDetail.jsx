@@ -5,13 +5,14 @@ import { subDays, format } from "date-fns";
 import {
   useEmployee,
   useUpdateEmployee,
-  useDeactivateEmployee,
+  useDeleteEmployee,
 } from "../hooks/useEmployees";
 import { useDepartments } from "../hooks/useDepartments";
 import { useMyAttendance } from "../hooks/useAttendance";
 import { useLeaveRequests, useLeaveBalances } from "../hooks/useLeave";
 import { Badge, Field, Spinner, ErrorBox, Empty, Stat } from "../ui/Bits";
 import { money, dateOnly, todayISO } from "../lib/format";
+import { useAuth } from "../contexts/AuthContext";
 
 export default function EmployeeDetail() {
   const { id } = useParams();
@@ -19,7 +20,8 @@ export default function EmployeeDetail() {
   const { data: emp, isLoading, error } = useEmployee(id);
   const { data: departments } = useDepartments();
   const update = useUpdateEmployee();
-  const deactivate = useDeactivateEmployee();
+  const deleteEmployee = useDeleteEmployee();
+  const { isAdmin, isManager, employee: me } = useAuth();
 
   const [form, setForm] = useState(null);
   useEffect(() => {
@@ -70,7 +72,7 @@ export default function EmployeeDetail() {
       manager_id:
         form.role === "manager" || form.role === "admin"
           ? ""
-          : manager?.id ?? "",
+          : (manager?.id ?? ""),
     });
   }
 
@@ -246,22 +248,29 @@ export default function EmployeeDetail() {
               </Field>
 
               <div className="row" style={{ justifyContent: "space-between" }}>
-                <button
-                  type="button"
-                  className="btn btn-danger btn-sm"
-                  onClick={() => {
-                    if (
-                      confirm(
-                        `Deactivate ${emp.full_name}? They'll be hidden from active lists.`,
+                {(isAdmin ||
+                  (isManager &&
+                    emp.role === "employee" &&
+                    String(emp.manager_id) === String(me?.id))) && (
+                  <button
+                    type="button"
+                    className="btn btn-danger btn-sm"
+                    disabled={deleteEmployee.isPending}
+                    onClick={() => {
+                      if (
+                        confirm(
+                          `Delete ${emp.full_name}? This permanently removes them, revokes their login, and cannot be undone. If they manage a department, that department will be left without a manager.`,
+                        )
                       )
-                    )
-                      deactivate.mutate(id, {
-                        onSuccess: () => navigate("/employees"),
-                      });
-                  }}
-                >
-                  <UserX size={14} /> Deactivate
-                </button>
+                        deleteEmployee.mutate(id, {
+                          onSuccess: () => navigate("/employees"),
+                        });
+                    }}
+                  >
+                    <UserX size={14} />{" "}
+                    {deleteEmployee.isPending ? "Deleting…" : "Delete"}
+                  </button>
+                )}
                 <button className="btn btn-primary" disabled={update.isPending}>
                   {update.isPending ? "Saving…" : "Save changes"}
                 </button>
