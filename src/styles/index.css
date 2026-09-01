@@ -736,7 +736,7 @@ table.tbl {
 .bar i {
   display: block;
   height: 100%;
-  background: var(--pine-500);
+  background: #169777;
   border-radius: 20px;
   transition: width 0.4s ease;
 }
