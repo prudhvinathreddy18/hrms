@@ -10,7 +10,6 @@ import AppLayout from "./components/AppLayout";
 import { Spinner } from "./ui/Bits";
 
 const Login = lazy(() => import("./pages/Login"));
-const Signup = lazy(() => import("./pages/Signup"));
 const Dashboard = lazy(() => import("./pages/Dashboard"));
 const Employees = lazy(() => import("./pages/Employees"));
 const EmployeeDetail = lazy(() => import("./pages/EmployeeDetail"));
@@ -40,7 +39,6 @@ export default function App() {
           <Suspense fallback={<Spinner />}>
             <Routes>
             <Route path="/login" element={<Login />} />
-            <Route path="/signup" element={<Signup />} />
 
             <Route
               element={

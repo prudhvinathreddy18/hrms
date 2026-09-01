@@ -6,7 +6,7 @@
 :root {
   --pine-900: #10302b;
   --pine-700: #23594f;
-  --pine-500: #3f8f7f;
+  --pine-500: #10866f;
   --pine-300: #7dc4b3;
   --pine-100: #1a352d;
   --pine-050: #f0f6f4;
@@ -729,7 +729,7 @@ table.tbl {
 }
 .bar {
   height: 7px;
-  background: var(--line-2);
+  background: #98FB98;
   border-radius: 20px;
   overflow: hidden;
 }
