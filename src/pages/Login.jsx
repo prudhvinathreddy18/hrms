@@ -164,16 +164,6 @@ export default function Login() {
             >
               {isPending ? "Signing in…" : "Sign in to Dashboard"}
             </button>
-
-            <p
-              className="small dim"
-              style={{ textAlign: "center", marginTop: 8 }}
-            >
-              No account yet?{" "}
-              <Link to="/signup" className="auth-link">
-                Request access
-              </Link>
-            </p>
           </form>
         </div>
       </div>
