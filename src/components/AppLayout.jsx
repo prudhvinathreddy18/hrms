@@ -7,6 +7,7 @@ import { AppSidebar } from "./app-sidebar";
 import { useAuth } from "../contexts/AuthContext";
 import { logout } from "../services/apiAuth";
 import { Badge } from "../ui/Bits";
+import ParticleButton from "./kokonutui/particle-button";
 
 function MenuToggleButton() {
   const { toggleSidebar } = useSidebar();
@@ -44,9 +45,14 @@ export default function AppLayout() {
           <div className="topbar-right">
             {role && <Badge kind={role}>{role}</Badge>}
 
-            <button className="btn btn-ghost btn-sm" onClick={handleLogout}>
-              <LogOut size={14} /> Sign out
-            </button>
+            <ParticleButton
+              variant="ghost"
+              size="sm"
+              className="text-sm"
+              onClick={handleLogout}
+            >
+              <LogOut size={10} /> Sign out
+            </ParticleButton>
           </div>
         </header>
 
