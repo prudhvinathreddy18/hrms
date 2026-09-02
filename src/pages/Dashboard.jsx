@@ -1,13 +1,10 @@
 import { Link } from "react-router-dom";
-import {
-  BarChart,
-  Bar,
-  XAxis,
-  YAxis,
-  Tooltip,
-  ResponsiveContainer,
-  CartesianGrid,
-} from "recharts";
+import BarChart from "../components/charts/bar-chart";
+import Bar from "../components/charts/bar";
+import { BarDepthBack, BarDepthFront } from "../components/charts/bar-depth";
+import BarXAxis from "../components/charts/bar-x-axis";
+import Grid from "../components/charts/grid";
+import { ChartTooltip } from "../components/charts/tooltip";
 import { useAuth } from "../contexts/AuthContext";
 import { useDashboardStats } from "../hooks/usePayroll";
 import { useLeaveRequests, useLeaveBalances } from "../hooks/useLeave";
@@ -156,47 +153,18 @@ export default function Dashboard() {
               <h2>Headcount by department</h2>
             </div>
             <div className="card-body" style={{ height: 240 }}>
-              <ResponsiveContainer width="100%" height="100%">
-                <BarChart
-                  data={stats.by_department}
-                  margin={{ left: -22, right: 6 }}
-                >
-                  <CartesianGrid
-                    strokeDasharray="2 4"
-                    stroke="var(--line)"
-                    vertical={false}
-                  />
-                  <XAxis
-                    dataKey="department"
-                    tick={{ fontSize: 10, fill: "var(--ink-3)" }}
-                    interval={0}
-                    angle={-30}
-                    textAnchor="end"
-                    height={60}
-                  />
-                  <YAxis
-                    tick={{ fontSize: 10, fill: "var(--ink-3)" }}
-                    allowDecimals={false}
-                  />
-                  <Tooltip
-                    cursor={{ fill: "var(--surface-2)" }}
-                    contentStyle={{
-                      borderRadius: 8,
-                      border: "1px solid var(--line)",
-                      background: "var(--surface)",
-                      color: "var(--ink)",
-                      fontSize: 12,
-                    }}
-                    labelStyle={{ color: "var(--ink)" }}
-                    itemStyle={{ color: "var(--ink-2)" }}
-                  />
-                  <Bar
-                    dataKey="count"
-                    fill="var(--pine-500)"
-                    radius={[3, 3, 0, 0]}
-                  />
-                </BarChart>
-              </ResponsiveContainer>
+              <BarChart
+                margin={{ top: 8, right: 8, bottom: 40, left: 8 }}
+                data={stats.by_department}
+                xDataKey="department"
+              >
+                <Grid horizontal />
+                <BarDepthBack dataKey="count" color="var(--pine-500)" />
+                <Bar dataKey="count" fill="var(--pine-500)" perspective />
+                <BarDepthFront dataKey="count" />
+                <BarXAxis />
+                <ChartTooltip showCrosshair={false} showDots={false} />
+              </BarChart>
             </div>
           </div>
         ) : canApprove ? (

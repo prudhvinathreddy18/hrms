@@ -1,15 +1,24 @@
-import { useState } from "react";
 import { Outlet, useNavigate } from "react-router-dom";
-import { LogOut, Menu } from "lucide-react";
+import { LogOut } from "lucide-react";
+import { TbLayoutSidebar } from "react-icons/tb";
 import toast from "react-hot-toast";
-import Sidebar from "./Sidebar";
+import { SidebarProvider, useSidebar } from "./ui/sidebar";
+import { AppSidebar } from "./app-sidebar";
 import { useAuth } from "../contexts/AuthContext";
 import { logout } from "../services/apiAuth";
 import { Badge } from "../ui/Bits";
 
+function MenuToggleButton() {
+  const { toggleSidebar } = useSidebar();
+  return (
+    <button className="menu-btn btn btn-ghost btn-sm" onClick={toggleSidebar}>
+      <TbLayoutSidebar size={16} />
+    </button>
+  );
+}
+
 export default function AppLayout() {
   const { employee, role } = useAuth();
-  const [open, setOpen] = useState(false);
   const navigate = useNavigate();
 
   async function handleLogout() {
@@ -22,15 +31,12 @@ export default function AppLayout() {
   }
 
   return (
-    <div className="app">
-      <Sidebar open={open} onNavigate={() => setOpen(false)} />
-      {open && <div className="scrim" onClick={() => setOpen(false)} />}
+    <SidebarProvider style={{ "--sidebar-width": "var(--sidebar-w)" }}>
+      <AppSidebar />
 
       <div className="main">
         <header className="topbar">
-          <button className="menu-btn btn btn-ghost btn-sm" onClick={() => setOpen(true)}>
-            <Menu size={16} />
-          </button>
+          <MenuToggleButton />
           <div className="topbar-title">
             {greeting()}, {employee?.full_name?.split(" ")[0] ?? "there"}
           </div>
@@ -48,7 +54,7 @@ export default function AppLayout() {
           <Outlet />
         </main>
       </div>
-    </div>
+    </SidebarProvider>
   );
 }
 

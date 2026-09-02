@@ -1,6 +1,14 @@
-import { useState } from "react";
+import { useEffect, useRef, useState } from "react";
 import { Link, useNavigate } from "react-router-dom";
 import { useMutation } from "@tanstack/react-query";
+import {
+  animate,
+  createTimeline,
+  stagger,
+  splitText,
+  scrambleText,
+  random,
+} from "animejs";
 import toast from "react-hot-toast";
 import { login } from "../services/apiAuth";
 import { useAuth } from "../contexts/AuthContext";
@@ -11,6 +19,50 @@ export default function Login() {
   const [password, setPassword] = useState("");
   const navigate = useNavigate();
   const { refreshEmployee } = useAuth();
+  const heroTitleRef = useRef(null);
+  const welcomeRef = useRef(null);
+  const brandTextRef = useRef(null);
+
+  useEffect(() => {
+    if (!heroTitleRef.current) return;
+    const split = splitText(heroTitleRef.current, {
+      words: { wrap: "clip" },
+      chars: true,
+    });
+    const { words, chars } = split;
+
+    const timeline = createTimeline({
+      loop: true,
+      defaults: { ease: "inOut(3)", duration: 650 },
+    })
+      .add(
+        words,
+        { y: [($el) => (+$el.dataset.line % 2 ? "100%" : "-100%"), "0%"] },
+        stagger(125),
+      )
+      .add(
+        chars,
+        { y: ($el) => (+$el.dataset.line % 2 ? "100%" : "-100%") },
+        stagger(10, { from: "random" }),
+      )
+      .init();
+
+    return () => {
+      timeline.pause();
+      split.revert();
+    };
+  }, []);
+
+  useEffect(() => {
+    if (!welcomeRef.current) return;
+    const anim = animate(welcomeRef.current, {
+      innerHTML: scrambleText(),
+      loop: true,
+      loopDelay: 1000,
+    });
+
+    return () => anim.pause();
+  }, []);
 
   const { mutate, isPending } = useMutation({
     mutationFn: login,
@@ -57,7 +109,7 @@ export default function Login() {
 
           {/* Hero Value Prop */}
           <div className="auth-hero">
-            <h1>
+            <h1 ref={heroTitleRef}>
               Every day,
               <br />
               on the record.
@@ -95,7 +147,9 @@ export default function Login() {
           <form className="auth-form" onSubmit={submit}>
             <div className="auth-form-header">
               <div className="eyebrow">Sign in</div>
-              <h1 style={{ marginTop: 6 }}>Welcome back</h1>
+              <h1 ref={welcomeRef} style={{ marginTop: 6 }}>
+                Welcome back
+              </h1>
               <p className="auth-form-sub">
                 Access your administrative dashboard.
               </p>

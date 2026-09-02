@@ -8,18 +8,19 @@ import { AuthProvider } from "./contexts/AuthContext";
 import ProtectedRoute from "./components/ProtectedRoute";
 import AppLayout from "./components/AppLayout";
 import { Spinner } from "./ui/Bits";
+import { pageImporters } from "./routes/pages";
 
-const Login = lazy(() => import("./pages/Login"));
-const Dashboard = lazy(() => import("./pages/Dashboard"));
-const Employees = lazy(() => import("./pages/Employees"));
-const EmployeeDetail = lazy(() => import("./pages/EmployeeDetail"));
-const Departments = lazy(() => import("./pages/Departments"));
-const Leave = lazy(() => import("./pages/Leave"));
-const LeaveApprovals = lazy(() => import("./pages/LeaveApprovals"));
-const Attendance = lazy(() => import("./pages/Attendance"));
-const TeamAttendance = lazy(() => import("./pages/TeamAttendance"));
-const Profile = lazy(() => import("./pages/Profile"));
-const NotFound = lazy(() => import("./pages/NotFound"));
+const Login = lazy(pageImporters.login);
+const Dashboard = lazy(pageImporters.dashboard);
+const Employees = lazy(pageImporters.employees);
+const EmployeeDetail = lazy(pageImporters.employeeDetail);
+const Departments = lazy(pageImporters.departments);
+const Leave = lazy(pageImporters.leave);
+const LeaveApprovals = lazy(pageImporters.leaveApprovals);
+const Attendance = lazy(pageImporters.attendance);
+const TeamAttendance = lazy(pageImporters.teamAttendance);
+const Profile = lazy(pageImporters.profile);
+const NotFound = lazy(pageImporters.notFound);
 
 const queryClient = new QueryClient({
   defaultOptions: {
