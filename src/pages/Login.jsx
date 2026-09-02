@@ -33,7 +33,7 @@ export default function Login() {
 
     const timeline = createTimeline({
       loop: true,
-      defaults: { ease: "inOut(3)", duration: 650 },
+      defaults: { ease: "inOut(3)", duration: 1300 },
     })
       .add(
         words,
@@ -58,7 +58,7 @@ export default function Login() {
     const anim = animate(welcomeRef.current, {
       innerHTML: scrambleText(),
       loop: true,
-      loopDelay: 1000,
+      loopDelay: 1300,
     });
 
     return () => anim.pause();

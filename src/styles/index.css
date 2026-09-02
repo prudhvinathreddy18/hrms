@@ -256,6 +256,7 @@ h3 {
 }
 
 .sidebar {
+ 
   background: var(--pine-900);
   color: #cddedb;
   padding: 20px 14px;
@@ -347,8 +348,12 @@ h3 {
   flex: 1;
 }
 
-/* ---------- shadcn sidebar: preserve existing nav-link look ---------- */
+
+[data-slot="sidebar-content"] {
+  margin-top: 25px;
+}
 [data-slot="sidebar-menu-button"] {
+  margin-top: 6px;
   gap: 10px;
   padding: 8px 9px;
   border-radius: var(--r);
@@ -395,6 +400,7 @@ h3 {
 }
 .content {
   padding: 24px;
+
   max-width: 1240px;
   width: 100%;
 }
