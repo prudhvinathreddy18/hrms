@@ -446,6 +446,7 @@ h3 {
   border: 1px solid var(--line);
   border-radius: var(--r-lg);
   box-shadow: var(--shadow);
+  min-width: 0;
 }
 .card-head {
   padding: 14px 18px;
@@ -461,6 +462,8 @@ h3 {
 }
 .card-body {
   padding: 18px;
+  overflow: hidden;
+  min-width: 0;
 }
 
 .grid {
