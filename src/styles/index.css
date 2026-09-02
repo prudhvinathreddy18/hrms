@@ -447,6 +447,7 @@ h3 {
   border-radius: var(--r-lg);
   box-shadow: var(--shadow);
   min-width: 0;
+
 }
 .card-head {
   padding: 14px 18px;
@@ -546,6 +547,21 @@ h3 {
 }
 .btn-block {
   width: 100%;
+}
+
+.label-window {
+  position: relative;
+  display: block;
+  width: max-content;
+  overflow: hidden;
+}
+.label-copy {
+  display: block;
+  white-space: nowrap;
+}
+.label-copy--incoming {
+  position: absolute;
+  inset: 0;
 }
 
 .badge {

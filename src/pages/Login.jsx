@@ -1,6 +1,7 @@
 import { useEffect, useRef, useState } from "react";
 import { Link, useNavigate } from "react-router-dom";
 import { useMutation } from "@tanstack/react-query";
+import { motion, useReducedMotion } from "motion/react";
 import {
   animate,
   createTimeline,
@@ -14,6 +15,19 @@ import { login } from "../services/apiAuth";
 import { useAuth } from "../contexts/AuthContext";
 import { Field, MusterStrip, MusterLegend } from "../ui/Bits";
 
+const rollingOutVariants = {
+  rest: { transform: "translateY(0%)" },
+  active: { transform: "translateY(100%)" },
+};
+const rollingInVariants = {
+  rest: { transform: "translateY(-100%)" },
+  active: { transform: "translateY(0%)" },
+};
+const rollingTransition = {
+  duration: 0.3,
+  ease: [0.338, 0.015, 0.395, 0.959],
+};
+
 export default function Login() {
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
@@ -22,6 +36,53 @@ export default function Login() {
   const heroTitleRef = useRef(null);
   const welcomeRef = useRef(null);
   const brandTextRef = useRef(null);
+
+  const reduceMotion = useReducedMotion();
+  const [labelActive, setLabelActive] = useState(false);
+  const labelActiveRef = useRef(false);
+  const labelAnimating = useRef(false);
+  const labelPending = useRef(null);
+  const labelHovered = useRef(false);
+  const labelFocused = useRef(false);
+
+  const updateLabelActive = (next) => {
+    labelActiveRef.current = next;
+    setLabelActive(next);
+  };
+
+  const requestLabelActive = (next) => {
+    if (reduceMotion) return;
+
+    if (next === labelActiveRef.current) {
+      labelPending.current = null;
+      return;
+    }
+
+    if (labelAnimating.current) {
+      labelPending.current = next;
+      return;
+    }
+
+    labelAnimating.current = true;
+    updateLabelActive(next);
+  };
+
+  const completeLabelAnimation = () => {
+    if (!labelAnimating.current) return;
+    labelAnimating.current = false;
+
+    if (
+      labelPending.current !== null &&
+      labelPending.current !== labelActiveRef.current
+    ) {
+      const next = labelPending.current;
+      labelPending.current = null;
+      labelAnimating.current = true;
+      updateLabelActive(next);
+    } else {
+      labelPending.current = null;
+    }
+  };
 
   useEffect(() => {
     if (!heroTitleRef.current) return;
@@ -211,13 +272,53 @@ export default function Login() {
               </div>
             </Field>
 
-            <button
+            <motion.button
               className="btn btn-primary btn-block btn-lg"
               disabled={isPending}
               type="submit"
+              onHoverStart={() => {
+                labelHovered.current = true;
+                requestLabelActive(true);
+              }}
+              onHoverEnd={() => {
+                labelHovered.current = false;
+                requestLabelActive(labelFocused.current);
+              }}
+              onFocus={() => {
+                labelFocused.current = true;
+                requestLabelActive(true);
+              }}
+              onBlur={() => {
+                labelFocused.current = false;
+                requestLabelActive(labelHovered.current);
+              }}
             >
-              {isPending ? "Signing in…" : "Sign in to Dashboard"}
-            </button>
+              {isPending ? (
+                "Signing in…"
+              ) : (
+                <span className="label-window">
+                  <motion.span
+                    className="label-copy"
+                    variants={rollingOutVariants}
+                    initial="rest"
+                    animate={labelActive ? "active" : "rest"}
+                    onAnimationComplete={completeLabelAnimation}
+                    transition={rollingTransition}
+                  >
+                    Sign in to Dashboard
+                  </motion.span>
+                  <motion.span
+                    className="label-copy label-copy--incoming"
+                    variants={rollingInVariants}
+                    initial="rest"
+                    animate={labelActive ? "active" : "rest"}
+                    transition={rollingTransition}
+                  >
+                    Sign in to Dashboard
+                  </motion.span>
+                </span>
+              )}
+            </motion.button>
           </form>
         </div>
       </div>

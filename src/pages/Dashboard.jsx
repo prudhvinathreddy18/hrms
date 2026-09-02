@@ -113,7 +113,7 @@ export default function Dashboard() {
         </div>
       )}
 
-      <div className="grid g2">
+      <div className="grid g2" style={{ marginBottom: 16 }}>
         <div className="card">
           <div className="card-head">
             <h2>My recent requests</h2>
