@@ -1082,6 +1082,25 @@ table.tbl {
   font-size: 16px;
   letter-spacing: -0.01em;
   color: #fff;
+  /* Shimmer: a bright band sweeps across the wordmark (see Login.jsx) */
+  background-image: linear-gradient(
+    90deg,
+    #fff 0%,
+    rgba(255, 255, 255, 0.45) 40%,
+    var(--gold-500) 50%,
+    rgba(255, 255, 255, 0.45) 60%,
+    #fff 100%
+  );
+  background-size: 200% 100%;
+  background-clip: text;
+  -webkit-background-clip: text;
+  -webkit-text-fill-color: transparent;
+}
+@media (prefers-reduced-motion: reduce) {
+  .auth-brand-text {
+    background-image: none;
+    -webkit-text-fill-color: #fff;
+  }
 }
 .auth-brand-icon span {
   color: var(--gold-500);

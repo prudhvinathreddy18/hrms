@@ -165,7 +165,22 @@ export default function Login() {
                 EMS
               </span>
             </div>
-            <span className="auth-brand-text">Employee Management System</span>
+            <motion.span
+              ref={brandTextRef}
+              className="auth-brand-text"
+              animate={
+                reduceMotion
+                  ? undefined
+                  : { backgroundPosition: ["200% center", "-200% center"] }
+              }
+              transition={{
+                duration: 100,
+                ease: "linear",
+                repeat: Infinity,
+              }}
+            >
+              Employee Management System
+            </motion.span>
           </div>
 
           {/* Hero Value Prop */}
