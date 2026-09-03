@@ -355,17 +355,16 @@ function HeartParticles({ anchorRef, color }) {
   );
 }
 
-export function Badge({ children, kind = "", hearts = false, ...props }) {
-  const badgeRef = useRef(null);
+export function HeartHover({ as: Tag = "span", className, children, ...props }) {
+  const anchorRef = useRef(null);
   const timeoutRef = useRef(null);
   const [showHearts, setShowHearts] = useState(false);
   const [heartColor, setHeartColor] = useState("currentColor");
 
   function handleMouseEnter() {
-    if (!hearts) return;
     clearTimeout(timeoutRef.current);
-    if (badgeRef.current) {
-      const styles = getComputedStyle(badgeRef.current);
+    if (anchorRef.current) {
+      const styles = getComputedStyle(anchorRef.current);
       const bg = styles.backgroundColor;
       setHeartColor(
         bg && bg !== "rgba(0, 0, 0, 0)" && bg !== "transparent"
@@ -386,22 +385,29 @@ export function Badge({ children, kind = "", hearts = false, ...props }) {
 
   return (
     <>
-      {showHearts && <HeartParticles anchorRef={badgeRef} color={heartColor} />}
-      <span
+      {showHearts && <HeartParticles anchorRef={anchorRef} color={heartColor} />}
+      <Tag
         className={cn(
-          `badge ${kind}`,
-          hearts && "transition-transform duration-100",
+          "transition-transform duration-100",
           showHearts && "scale-95",
+          className,
         )}
         onMouseEnter={handleMouseEnter}
         onMouseLeave={handleMouseLeave}
-        ref={badgeRef}
+        ref={anchorRef}
         {...props}
       >
         {children}
-      </span>
+      </Tag>
     </>
   );
+}
+
+export function Badge({ children, kind = "", hearts = false }) {
+  if (hearts) {
+    return <HeartHover className={`badge ${kind}`}>{children}</HeartHover>;
+  }
+  return <span className={`badge ${kind}`}>{children}</span>;
 }
 
 function initials(name) {

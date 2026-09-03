@@ -1,5 +1,6 @@
 import { Outlet, useNavigate } from "react-router-dom";
 import { LogOut } from "lucide-react";
+import { motion, useReducedMotion } from "motion/react";
 import { TbLayoutSidebar } from "react-icons/tb";
 import toast from "react-hot-toast";
 import { SidebarProvider, useSidebar } from "./ui/sidebar";
@@ -21,6 +22,7 @@ function MenuToggleButton() {
 export default function AppLayout() {
   const { employee, role } = useAuth();
   const navigate = useNavigate();
+  const reduceMotion = useReducedMotion();
 
   async function handleLogout() {
     try {
@@ -38,9 +40,21 @@ export default function AppLayout() {
       <div className="main">
         <header className="topbar">
           <MenuToggleButton />
-          <div className="topbar-title">
+          <motion.div
+            className="topbar-title"
+            animate={
+              reduceMotion
+                ? undefined
+                : { backgroundPosition: ["200% center", "-200% center"] }
+            }
+            transition={{
+              duration: 2.5,
+              ease: "linear",
+              repeat: Infinity,
+            }}
+          >
             {greeting()}, {employee?.full_name?.split(" ")[0] ?? "there"}
-          </div>
+          </motion.div>
 
           <div className="topbar-right">
             {role && (

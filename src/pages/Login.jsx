@@ -35,7 +35,6 @@ export default function Login() {
   const { refreshEmployee } = useAuth();
   const heroTitleRef = useRef(null);
   const welcomeRef = useRef(null);
-  const brandTextRef = useRef(null);
 
   const reduceMotion = useReducedMotion();
   const [labelActive, setLabelActive] = useState(false);
@@ -165,22 +164,9 @@ export default function Login() {
                 EMS
               </span>
             </div>
-            <motion.span
-              ref={brandTextRef}
-              className="auth-brand-text"
-              animate={
-                reduceMotion
-                  ? undefined
-                  : { backgroundPosition: ["200% center", "-200% center"] }
-              }
-              transition={{
-                duration: 2.5,
-                ease: "linear",
-                repeat: Infinity,
-              }}
-            >
+            <span className="auth-brand-text">
               Employee Management System
-            </motion.span>
+            </span>
           </div>
 
           {/* Hero Value Prop */}
