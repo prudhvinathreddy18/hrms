@@ -1,11 +1,11 @@
-import { X } from "lucide-react";
+"use client";;
 import { motion } from "motion/react";
 import { cn } from "@/lib/utils";
 
-export function Spinner({
+export default function Loader({
   title = "Configuring your account...",
   subtitle = "Please wait while we prepare everything for you",
-  size = "sm",
+  size = "md",
   className,
   ...props
 }) {
@@ -38,8 +38,8 @@ export function Spinner({
   return (
     <div
       className={cn(
-        "flex min-h-[60vh] w-full flex-col items-center justify-center gap-8 p-8",
-        className,
+        "flex flex-col items-center justify-center gap-8 p-8",
+        className
       )}
       {...props}
     >
@@ -63,7 +63,7 @@ export function Spinner({
           className="absolute inset-0 rounded-full"
           style={{
             background:
-              "conic-gradient(from 0deg, transparent 0deg, rgb(16, 134, 111) 90deg, transparent 180deg)",
+              "conic-gradient(from 0deg, transparent 0deg, rgb(0, 0, 0) 90deg, transparent 180deg)",
             mask: "radial-gradient(circle at 50% 50%, transparent 35%, black 37%, black 39%, transparent 41%)",
             WebkitMask:
               "radial-gradient(circle at 50% 50%, transparent 35%, black 37%, black 39%, transparent 41%)",
@@ -84,7 +84,7 @@ export function Spinner({
           className="absolute inset-0 rounded-full"
           style={{
             background:
-              "conic-gradient(from 0deg, transparent 0deg, rgb(16, 134, 111) 120deg, rgba(16, 134, 111, 0.5) 240deg, transparent 360deg)",
+              "conic-gradient(from 0deg, transparent 0deg, rgb(0, 0, 0) 120deg, rgba(0, 0, 0, 0.5) 240deg, transparent 360deg)",
             mask: "radial-gradient(circle at 50% 50%, transparent 42%, black 44%, black 48%, transparent 50%)",
             WebkitMask:
               "radial-gradient(circle at 50% 50%, transparent 42%, black 44%, black 48%, transparent 50%)",
@@ -105,7 +105,7 @@ export function Spinner({
           className="absolute inset-0 rounded-full"
           style={{
             background:
-              "conic-gradient(from 180deg, transparent 0deg, rgba(16, 134, 111, 0.6) 45deg, transparent 90deg)",
+              "conic-gradient(from 180deg, transparent 0deg, rgba(0, 0, 0, 0.6) 45deg, transparent 90deg)",
             mask: "radial-gradient(circle at 50% 50%, transparent 52%, black 54%, black 56%, transparent 58%)",
             WebkitMask:
               "radial-gradient(circle at 50% 50%, transparent 52%, black 54%, black 56%, transparent 58%)",
@@ -126,7 +126,7 @@ export function Spinner({
           className="absolute inset-0 rounded-full"
           style={{
             background:
-              "conic-gradient(from 270deg, transparent 0deg, rgba(16, 134, 111, 0.4) 20deg, transparent 40deg)",
+              "conic-gradient(from 270deg, transparent 0deg, rgba(0, 0, 0, 0.4) 20deg, transparent 40deg)",
             mask: "radial-gradient(circle at 50% 50%, transparent 61%, black 62%, black 63%, transparent 64%)",
             WebkitMask:
               "radial-gradient(circle at 50% 50%, transparent 61%, black 62%, black 63%, transparent 64%)",
@@ -147,7 +147,7 @@ export function Spinner({
           className="absolute inset-0 hidden rounded-full dark:block"
           style={{
             background:
-              "conic-gradient(from 0deg, transparent 0deg, rgb(125, 196, 179) 90deg, transparent 180deg)",
+              "conic-gradient(from 0deg, transparent 0deg, rgb(255, 255, 255) 90deg, transparent 180deg)",
             mask: "radial-gradient(circle at 50% 50%, transparent 35%, black 37%, black 39%, transparent 41%)",
             WebkitMask:
               "radial-gradient(circle at 50% 50%, transparent 35%, black 37%, black 39%, transparent 41%)",
@@ -187,7 +187,7 @@ export function Spinner({
           className="absolute inset-0 hidden rounded-full dark:block"
           style={{
             background:
-              "conic-gradient(from 180deg, transparent 0deg, rgba(125, 196, 179, 0.6) 45deg, transparent 90deg)",
+              "conic-gradient(from 180deg, transparent 0deg, rgba(255, 255, 255, 0.6) 45deg, transparent 90deg)",
             mask: "radial-gradient(circle at 50% 50%, transparent 52%, black 54%, black 56%, transparent 58%)",
             WebkitMask:
               "radial-gradient(circle at 50% 50%, transparent 52%, black 54%, black 56%, transparent 58%)",
@@ -207,7 +207,7 @@ export function Spinner({
           className="absolute inset-0 hidden rounded-full dark:block"
           style={{
             background:
-              "conic-gradient(from 270deg, transparent 0deg, rgba(125, 196, 179, 0.4) 20deg, transparent 40deg)",
+              "conic-gradient(from 270deg, transparent 0deg, rgba(255, 255, 255, 0.4) 20deg, transparent 40deg)",
             mask: "radial-gradient(circle at 50% 50%, transparent 61%, black 62%, black 63%, transparent 64%)",
             WebkitMask:
               "radial-gradient(circle at 50% 50%, transparent 61%, black 62%, black 63%, transparent 64%)",
@@ -243,7 +243,7 @@ export function Spinner({
           }}
           className={cn(
             config.titleClass,
-            "font-medium text-black/90 leading-[1.15] tracking-[-0.02em] antialiased dark:text-white/90",
+            "font-medium text-black/90 leading-[1.15] tracking-[-0.02em] antialiased dark:text-white/90"
           )}
           initial={{ opacity: 0, y: 12 }}
           transition={{
@@ -274,7 +274,7 @@ export function Spinner({
           }}
           className={cn(
             config.subtitleClass,
-            "font-normal text-black/60 leading-[1.45] tracking-[-0.01em] antialiased dark:text-white/60",
+            "font-normal text-black/60 leading-[1.45] tracking-[-0.01em] antialiased dark:text-white/60"
           )}
           initial={{ opacity: 0, y: 8 }}
           transition={{
@@ -297,159 +297,6 @@ export function Spinner({
           </motion.span>
         </motion.p>
       </motion.div>
-    </div>
-  );
-}
-
-export function Empty({ title, children }) {
-  return (
-    <div className="empty">
-      <h3>{title}</h3>
-      <p className="small">{children}</p>
-    </div>
-  );
-}
-
-export function ErrorBox({ error }) {
-  return (
-    <div className="card-body">
-      <p className="err">{error?.message ?? "Something went wrong."}</p>
-    </div>
-  );
-}
-
-export function Badge({ children, kind = "" }) {
-  return <span className={`badge ${kind}`}>{children}</span>;
-}
-
-function initials(name) {
-  if (!name) return "";
-  const parts = name.trim().split(/\s+/);
-  const first = parts[0]?.[0] ?? "";
-  const last = parts.length > 1 ? parts[parts.length - 1][0] : "";
-  return (first + last).toUpperCase();
-}
-
-export function Person({ name, sub }) {
-  return (
-    <div className="person">
-      <div className="person-avatar">{initials(name)}</div>
-      <div>
-        <div className="nm">{name}</div>
-        {sub && <div className="sub">{sub}</div>}
-      </div>
-    </div>
-  );
-}
-
-export function Field({ label, error, children }) {
-  return (
-    <div className="field">
-      {label && <label>{label}</label>}
-      {children}
-      {error && <span className="err">{error}</span>}
-    </div>
-  );
-}
-
-export function Stat({ label, value, sub }) {
-  return (
-    <div className="stat">
-      <div className="k">{label}</div>
-      <div className="v">{value}</div>
-      {sub && <div className="s">{sub}</div>}
-    </div>
-  );
-}
-
-export function Modal({ title, subtitle, onClose, children }) {
-  return (
-    <div className="overlay" onClick={onClose} role="presentation">
-      <div
-        className="modal"
-        onClick={(e) => e.stopPropagation()}
-        role="dialog"
-        aria-modal="true"
-        aria-label={title}
-      >
-        <div className="modal-head">
-          <div>
-            <h2>{title}</h2>
-            {subtitle && <p className="small dim">{subtitle}</p>}
-          </div>
-          <button onClick={onClose} aria-label="Close">
-            <X size={18} />
-          </button>
-        </div>
-        <div className="modal-body">{children}</div>
-      </div>
-    </div>
-  );
-}
-
-export function MusterStrip({ cells }) {
-  return (
-    <div className="muster">
-      {cells.map((c) => (
-        <div
-          key={c.key}
-          className={`muster-cell ${c.status}${c.today ? " today" : ""}`}
-          title={c.title}
-        >
-          {c.label}
-        </div>
-      ))}
-    </div>
-  );
-}
-
-export function MusterLegend() {
-  return (
-    <div className="muster-legend">
-      <span>
-        <i className="swatch" style={{ background: "var(--pine-700)" }} />
-        Present
-      </span>
-      <span>
-        <i className="swatch" style={{ background: "var(--pine-100)" }} />
-        Partial
-      </span>
-      <span>
-        <i className="swatch" style={{ background: "var(--amber-100)" }} />
-        Leave
-      </span>
-      <span>
-        <i
-          className="swatch"
-          style={{
-            background: "transparent",
-            border: "1px dashed var(--line)",
-          }}
-        />
-        Weekend
-      </span>
-    </div>
-  );
-}
-
-export function TableSkeleton({ rows = 5, cols = 4 }) {
-  return (
-    <div className="card-body">
-      {Array.from({ length: rows }).map((_, r) => (
-        <div
-          key={r}
-          className="row"
-          style={{ gap: 16, marginBottom: 14, flexWrap: "nowrap" }}
-        >
-          {Array.from({ length: cols }).map((_, c) => (
-            <div
-              key={c}
-              className="skeleton"
-              style={{ flex: c === 0 ? 2 : 1 }}
-            />
-          ))}
-        </div>
-      ))}
     </div>
   );
 }

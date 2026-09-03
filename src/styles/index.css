@@ -934,9 +934,10 @@ table.tbl {
   }
 }
 .center {
-  display: grid;
-  place-items: center;
-  padding: 48px;
+  display: flex;
+ justify-content: center;
+ align-items: center;
+ margin-top: 15rem;
 }
 .skeleton {
   background: linear-gradient(90deg, var(--line-2), var(--surface-2), var(--line-2));
