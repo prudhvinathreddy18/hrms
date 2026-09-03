@@ -43,7 +43,11 @@ export default function AppLayout() {
           </div>
 
           <div className="topbar-right">
-            {role && <Badge kind={role}>{role}</Badge>}
+            {role && (
+              <Badge hearts kind={role}>
+                {role}
+              </Badge>
+            )}
 
             <ParticleButton
               variant="ghost"

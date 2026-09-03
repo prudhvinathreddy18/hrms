@@ -174,7 +174,7 @@ export default function Login() {
                   : { backgroundPosition: ["200% center", "-200% center"] }
               }
               transition={{
-                duration: 100,
+                duration: 2.5,
                 ease: "linear",
                 repeat: Infinity,
               }}

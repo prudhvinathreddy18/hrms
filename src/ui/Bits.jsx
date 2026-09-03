@@ -1,5 +1,6 @@
 import { X } from "lucide-react";
-import { motion } from "motion/react";
+import { AnimatePresence, motion } from "motion/react";
+import { useEffect, useRef, useState } from "react";
 import { cn } from "@/lib/utils";
 
 export function Spinner({
@@ -318,8 +319,89 @@ export function ErrorBox({ error }) {
   );
 }
 
-export function Badge({ children, kind = "" }) {
-  return <span className={`badge ${kind}`}>{children}</span>;
+function HeartParticles({ anchorRef, color }) {
+  const rect = anchorRef.current?.getBoundingClientRect();
+  if (!rect) return null;
+
+  const centerX = rect.left + rect.width / 2;
+  const centerY = rect.top + rect.height / 2;
+
+  return (
+    <AnimatePresence>
+      {[...Array(6)].map((_, i) => (
+        <motion.svg
+          animate={{
+            scale: [0, 1, 0],
+            opacity: [0, 1, 0],
+            x: [0, (i % 2 ? 1 : -1) * (Math.random() * 28 + 10)],
+            y: [0, -Math.random() * 34 - 14],
+          }}
+          className="pointer-events-none fixed z-50"
+          height="18"
+          initial={{ scale: 0, opacity: 0, x: 0, y: 0 }}
+          key={i}
+          style={{ left: centerX, top: centerY, color }}
+          transition={{ duration: 0.6, delay: i * 0.1, ease: "easeOut" }}
+          viewBox="0 0 24 24"
+          width="18"
+        >
+          <path
+            d="M12 21s-7.5-4.7-9.5-9A5.2 5.2 0 0 1 12 6.6 5.2 5.2 0 0 1 21.5 12c-2 4.3-9.5 9-9.5 9z"
+            fill="currentColor"
+          />
+        </motion.svg>
+      ))}
+    </AnimatePresence>
+  );
+}
+
+export function Badge({ children, kind = "", hearts = false, ...props }) {
+  const badgeRef = useRef(null);
+  const timeoutRef = useRef(null);
+  const [showHearts, setShowHearts] = useState(false);
+  const [heartColor, setHeartColor] = useState("currentColor");
+
+  function handleMouseEnter() {
+    if (!hearts) return;
+    clearTimeout(timeoutRef.current);
+    if (badgeRef.current) {
+      const styles = getComputedStyle(badgeRef.current);
+      const bg = styles.backgroundColor;
+      setHeartColor(
+        bg && bg !== "rgba(0, 0, 0, 0)" && bg !== "transparent"
+          ? bg
+          : styles.color,
+      );
+    }
+    setShowHearts(true);
+    timeoutRef.current = setTimeout(() => setShowHearts(false), 1000);
+  }
+
+  function handleMouseLeave() {
+    clearTimeout(timeoutRef.current);
+    setShowHearts(false);
+  }
+
+  useEffect(() => () => clearTimeout(timeoutRef.current), []);
+
+  return (
+    <>
+      {showHearts && <HeartParticles anchorRef={badgeRef} color={heartColor} />}
+      <span
+        className={cn(
+          `badge ${kind}`,
+          hearts && "transition-transform duration-100",
+          showHearts && "scale-95",
+        )}
+        onMouseEnter={handleMouseEnter}
+        onMouseLeave={handleMouseLeave}
+        ref={badgeRef}
+        {...props}
+      >
+        {children}
+      </span>
+    </>
+  );
 }
 
 function initials(name) {
