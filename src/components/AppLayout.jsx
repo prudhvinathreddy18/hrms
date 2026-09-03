@@ -4,7 +4,7 @@ import { motion, useReducedMotion } from "motion/react";
 import { TbLayoutSidebar } from "react-icons/tb";
 import toast from "react-hot-toast";
 import { SidebarProvider, useSidebar } from "./ui/sidebar";
-import { AppSidebar } from "./app-sidebar";
+import { AppSidebar } from "./Sidebar";
 import { useAuth } from "../contexts/AuthContext";
 import { logout } from "../services/apiAuth";
 import { Badge } from "../ui/Bits";
