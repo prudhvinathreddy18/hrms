@@ -35,7 +35,8 @@ export default function ResetPassword() {
 
   const { mutate, isPending } = useMutation({
     mutationFn: updatePassword,
-    onSuccess: () => {
+    onSuccess: async () => {
+      await supabase.auth.signOut();
       setDone(true);
       toast.success("Password updated");
       setTimeout(() => navigate("/login", { replace: true }), 1500);
