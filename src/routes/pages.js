@@ -1,5 +1,7 @@
 export const pageImporters = {
   login: () => import("../pages/Login"),
+  forgotPassword: () => import("../pages/ForgotPassword"),
+  resetPassword: () => import("../pages/ResetPassword"),
   dashboard: () => import("../pages/Dashboard"),
   employees: () => import("../pages/Employees"),
   employeeDetail: () => import("../pages/EmployeeDetail"),

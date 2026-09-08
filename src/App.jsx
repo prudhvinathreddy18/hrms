@@ -11,6 +11,8 @@ import { Spinner } from "./ui/Bits";
 import { pageImporters } from "./routes/pages";
 
 const Login = lazy(pageImporters.login);
+const ForgotPassword = lazy(pageImporters.forgotPassword);
+const ResetPassword = lazy(pageImporters.resetPassword);
 const Dashboard = lazy(pageImporters.dashboard);
 const Employees = lazy(pageImporters.employees);
 const EmployeeDetail = lazy(pageImporters.employeeDetail);
@@ -40,6 +42,8 @@ export default function App() {
           <Suspense fallback={<Spinner />}>
             <Routes>
             <Route path="/login" element={<Login />} />
+            <Route path="/forgot-password" element={<ForgotPassword />} />
+            <Route path="/reset-password" element={<ResetPassword />} />
 
             <Route
               element={

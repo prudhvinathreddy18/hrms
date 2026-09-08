@@ -271,6 +271,9 @@ export default function Login() {
                   required
                 />
               </div>
+              <Link to="/forgot-password" className="auth-forgot-link">
+                Forgot password?
+              </Link>
             </Field>
 
             <motion.button
