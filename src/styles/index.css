@@ -256,7 +256,7 @@ h3 {
 }
 
 .sidebar {
- 
+
   background: var(--pine-900);
   color: #cddedb;
   padding: 20px 14px;
@@ -347,7 +347,6 @@ h3 {
   min-width: 0;
   flex: 1;
 }
-
 
 [data-slot="sidebar-content"] {
   margin-top: 25px;
@@ -1417,6 +1416,27 @@ table.tbl {
   --color-chart-foreground-muted: var(----chart-foreground-muted);
   --color-chart-foreground: var(----chart-foreground);
   --color-chart-background: var(----chart-background);
+  --animate-shimmer-slide: shimmer-slide var(--speed) ease-in-out infinite alternate;
+  --animate-spin-around: spin-around calc(var(--speed) * 2) infinite linear;
+  @keyframes shimmer-slide {
+  to {
+    transform: translate(calc(100cqw - 100%), 0);
+    }
+  }
+  @keyframes spin-around {
+  0% {
+    transform: translateZ(0) rotate(0);
+    }
+  15%, 35% {
+    transform: translateZ(0) rotate(90deg);
+    }
+  65%, 85% {
+    transform: translateZ(0) rotate(270deg);
+    }
+  100% {
+    transform: translateZ(0) rotate(360deg);
+    }
+  }
 }
 
 .dark {

@@ -41,9 +41,17 @@ export async function checkIn(employeeId) {
       { employee_id: employeeId, work_date: todayISO(), check_in: new Date().toISOString() },
       { onConflict: "employee_id,work_date" }
     )
-    .select()
+    .select("*, employee:employees(full_name)")
     .single();
   if (error) throw new Error(error.message);
+
+  supabase.functions.invoke("notify-hr", {
+    body: {
+      subject: `Check-in: ${data.employee.full_name}`,
+      html: `<p><b>${data.employee.full_name}</b> checked in at ${new Date(data.check_in).toLocaleTimeString()}.</p>`,
+    },
+  }); // fire-and-forget, don't block the UI on email delivery
+
   return data;
 }
 

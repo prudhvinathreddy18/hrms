@@ -63,6 +63,16 @@ export async function updateEmployee({ id, ...payload }) {
     }
     throw new Error(error.message);
   }
+
+  if (payload.role) {
+    supabase.functions.invoke("notify-hr", {
+      body: {
+        subject: `Role updated: ${data.full_name}`,
+        html: `<p><b>${data.full_name}</b>'s role was changed to <b>${data.role}</b>.</p>`,
+      },
+    }); // fire-and-forget, don't block the UI on email delivery
+  }
+
   return data;
 }
 
