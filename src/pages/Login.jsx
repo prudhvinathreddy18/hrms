@@ -13,7 +13,7 @@ import toast from "react-hot-toast";
 import { login } from "../services/apiAuth";
 import { useAuth } from "../contexts/AuthContext";
 import { Field, MusterStrip, MusterLegend } from "../ui/Bits";
-import { Floating3DParticles } from "@/components/ui/floating-3d-particles";
+import { GlyphMatrix } from "@/components/ui/glyph-matrix";
 import { ShimmerButton } from "@/components/ui/shimmer-button";
 
 export default function Login() {
@@ -84,12 +84,18 @@ export default function Login() {
   return (
     <div className="auth">
       <aside className="auth-aside">
-        {/* Floating green 3D particles background */}
-        <Floating3DParticles color="#80ff00" opacity={0.5} />
+        {/* Green glyph matrix background */}
+        <GlyphMatrix
+          glyphs="01·•+*/\<>="
+          cellSize={14}
+          mutationRate={0.04}
+          interval={90}
+          fadeBottom={0.6}
+          color="#80ff00"
+          style={{ position: "absolute", inset: 0 }}
+        />
 
         {/* Abstract geometric shapes (hexagonal rotated elements from Login Page 1) */}
-        <div className="auth-geo-1" />
-        <div className="auth-geo-2" />
 
         <div className="auth-aside-content">
           {/* Header Brand */}
