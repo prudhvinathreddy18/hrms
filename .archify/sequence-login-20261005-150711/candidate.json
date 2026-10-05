@@ -1,0 +1,75 @@
+{
+  "schema_version": 1,
+  "diagram_type": "sequence",
+  "meta": {
+    "title": "HRMS Login Sequence",
+    "output": ".archify/sequence-login-20261005-150711/login-sequence.html",
+    "viewBox": [1080, 695],
+    "column_fit": "spread",
+    "quality_profile": "showcase"
+  },
+  "participants": [
+    { "id": "user", "type": "external", "label": "User", "sublabel": "browser" },
+    { "id": "login", "type": "frontend", "label": "Login page", "sublabel": "useMutation(login)" },
+    { "id": "sbauth", "type": "security", "label": "Supabase Auth", "sublabel": "GoTrue + local session" },
+    { "id": "ctx", "type": "frontend", "label": "AuthProvider", "sublabel": "React context" },
+    { "id": "route", "type": "frontend", "label": "ProtectedRoute", "sublabel": "role gate" },
+    { "id": "db", "type": "database", "label": "Postgres", "sublabel": "employees via PostgREST" },
+    { "id": "rt", "type": "messagebus", "label": "Realtime", "sublabel": "db-changes channel" }
+  ],
+  "messages": [
+    { "id": "submit", "from": "user", "to": "login", "y": 165, "label": "submit email + password", "variant": "default" },
+    { "id": "token", "from": "login", "to": "sbauth", "y": 195, "label": "signInWithPassword (POST /token)", "variant": "emphasis" },
+    { "id": "bad-creds", "from": "sbauth", "to": "login", "y": 225, "label": "invalid credentials -> toast", "variant": "dashed" },
+    { "id": "session-ok", "from": "sbauth", "to": "login", "y": 255, "label": "200 session + JWT", "variant": "return" },
+    { "id": "signed-in", "from": "sbauth", "to": "ctx", "y": 285, "label": "SIGNED_IN (onAuthStateChange)", "variant": "dashed" },
+    { "id": "refresh", "from": "login", "to": "ctx", "y": 315, "label": "refreshEmployee()", "variant": "default" },
+    { "id": "get-session", "from": "ctx", "to": "sbauth", "y": 345, "label": "getSession() - cached session", "variant": "security" },
+    { "id": "session-cached", "from": "sbauth", "to": "ctx", "y": 375, "label": "session (no network call)", "variant": "return" },
+    { "id": "employee-query", "from": "ctx", "to": "db", "y": 405, "label": "SELECT employee + department", "variant": "emphasis" },
+    { "id": "employee-row", "from": "db", "to": "ctx", "y": 435, "label": "employee row (RLS applied) or null", "variant": "return" },
+    { "id": "subscribe", "from": "ctx", "to": "rt", "y": 465, "label": "subscribe employees + departments", "variant": "dashed" },
+    { "id": "navigate", "from": "login", "to": "route", "y": 500, "label": "navigate /dashboard", "variant": "default" },
+    { "id": "use-auth", "from": "route", "to": "ctx", "y": 530, "label": "useAuth()", "variant": "default" },
+    { "id": "auth-state", "from": "ctx", "to": "route", "y": 560, "label": "session, employee, role", "variant": "return" },
+    { "id": "render", "from": "route", "to": "user", "y": 590, "label": "render Dashboard or redirect", "variant": "return" }
+  ],
+  "activations": [
+    { "participant": "login", "from": 160, "to": 505, "type": "frontend" },
+    { "participant": "sbauth", "from": 190, "to": 260, "type": "security" },
+    { "participant": "sbauth", "from": 340, "to": 380, "type": "security" },
+    { "participant": "ctx", "from": 280, "to": 470, "type": "frontend" },
+    { "participant": "ctx", "from": 525, "to": 565, "type": "frontend" },
+    { "participant": "db", "from": 400, "to": 440, "type": "database" },
+    { "participant": "route", "from": 495, "to": 595, "type": "frontend" }
+  ],
+  "cards": [
+    {
+      "dot": "emerald",
+      "title": "Happy path",
+      "items": [
+        "Credentials go straight from the browser to Supabase Auth",
+        "The employee row is fetched after the session exists",
+        "ProtectedRoute decides what renders from role and employee"
+      ]
+    },
+    {
+      "dot": "rose",
+      "title": "Failure branches",
+      "items": [
+        "Bad credentials: error toast, user stays on Login",
+        "No linked employee: Account not linked screen",
+        "Role not allowed: redirect to /dashboard"
+      ]
+    },
+    {
+      "dot": "orange",
+      "title": "No server cache",
+      "items": [
+        "No Redis or app server: the SPA talks to Supabase directly",
+        "Only cache lookup is the locally stored session",
+        "onAuthStateChange may also fetch the employee row"
+      ]
+    }
+  ]
+}

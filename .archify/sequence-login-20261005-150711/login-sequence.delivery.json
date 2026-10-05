@@ -1,0 +1,17 @@
+{
+  "schemaVersion": 1,
+  "receiptId": "b9cb8cec-e2cf-4d39-a0de-f6f286cd3892",
+  "status": "current",
+  "command": "deliver",
+  "type": "sequence",
+  "input": "C:\\Users\\USER\\Documents\\hrms\\.archify\\sequence-login-20261005-150711\\candidate.json",
+  "output": "C:\\Users\\USER\\Documents\\hrms\\.archify\\sequence-login-20261005-150711\\login-sequence.html",
+  "specification": {
+    "sha256": "d085d5fcc29f2f8502198e36adef77eff03cc265537f43c2bbf95db3d0fe4917",
+    "bytes": 4313
+  },
+  "artifact": {
+    "sha256": "cdadedb98b63640bcd34c37aa5bfc56caa58debc7b5239f499f037135e4f73ff",
+    "bytes": 763510
+  }
+}
