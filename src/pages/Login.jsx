@@ -1,20 +1,14 @@
 import { useEffect, useRef, useState } from "react";
 import { Link, useNavigate } from "react-router-dom";
 import { useMutation } from "@tanstack/react-query";
-import {
-  animate,
-  createTimeline,
-  stagger,
-  splitText,
-  scrambleText,
-  random,
-} from "animejs";
+import { createTimeline, stagger, splitText, random } from "animejs";
 import toast from "react-hot-toast";
 import { login } from "../services/apiAuth";
 import { useAuth } from "../contexts/AuthContext";
 import { Field, MusterStrip, MusterLegend } from "../ui/Bits";
 import { GlyphMatrix } from "@/components/ui/glyph-matrix";
 import { ShimmerButton } from "@/components/ui/shimmer-button";
+import { TextAnimate } from "@/components/ui/text-animate";
 
 export default function Login() {
   const [email, setEmail] = useState("");
@@ -22,7 +16,12 @@ export default function Login() {
   const navigate = useNavigate();
   const { refreshEmployee } = useAuth();
   const heroTitleRef = useRef(null);
-  const welcomeRef = useRef(null);
+  const [welcomeTick, setWelcomeTick] = useState(0);
+
+  useEffect(() => {
+    const id = setInterval(() => setWelcomeTick((t) => t + 1), 2000);
+    return () => clearInterval(id);
+  }, []);
 
   useEffect(() => {
     if (!heroTitleRef.current) return;
@@ -34,7 +33,7 @@ export default function Login() {
 
     const timeline = createTimeline({
       loop: true,
-      defaults: { ease: "inOut(3)", duration: 1300 },
+      defaults: { ease: "inOut(3)", duration: 2000 },
     })
       .add(
         words,
@@ -52,17 +51,6 @@ export default function Login() {
       timeline.pause();
       split.revert();
     };
-  }, []);
-
-  useEffect(() => {
-    if (!welcomeRef.current) return;
-    const anim = animate(welcomeRef.current, {
-      innerHTML: scrambleText(),
-      loop: true,
-      loopDelay: 1300,
-    });
-
-    return () => anim.pause();
   }, []);
 
   const { mutate, isPending } = useMutation({
@@ -154,8 +142,15 @@ export default function Login() {
           <form className="auth-form" onSubmit={submit}>
             <div className="auth-form-header">
               <div className="eyebrow">Sign in</div>
-              <h1 ref={welcomeRef} style={{ marginTop: 6 }}>
-                Welcome back
+              <h1 style={{ marginTop: 6 }}>
+                <TextAnimate
+                  key={welcomeTick}
+                  animation="blurInUp"
+                  by="character"
+                  once
+                >
+                  Welcome back
+                </TextAnimate>
               </h1>
               <p className="auth-form-sub">
                 Access your administrative dashboard.
