@@ -1,6 +1,7 @@
 import { useState } from "react";
 import { Link } from "react-router-dom";
-import { Plus, Search } from "lucide-react";
+import { Plus } from "lucide-react";
+import { GooeyInput } from "@/components/ui/gooey-input";
 import { useEmployees, useCreateEmployee } from "../hooks/useEmployees";
 import { useDepartments } from "../hooks/useDepartments";
 import {
@@ -54,21 +55,38 @@ export default function Employees() {
 
       <div className="card">
         <div className="card-head">
-          <div className="row" style={{ flex: 1 }}>
-            <div
-              className="input-icon-wrap"
-              style={{ flex: "1 1 220px", maxWidth: 300 }}
-            >
-              <Search size={15} className="input-icon" />
-              <input
-                className="input input--icon"
+          <div
+            className="row"
+            style={{ flex: 1, flexWrap: "nowrap", minWidth: 0 }}
+          >
+            <div style={{ width: 310, flexShrink: 0 }}>
+              <GooeyInput
+                className="justify-start"
                 placeholder="Search name or email"
                 value={search}
-                onChange={(e) => setSearch(e.target.value)}
+                onValueChange={setSearch}
+                collapsedWidth={115}
+                expandedWidth={250}
+                expandedOffset={52}
+                classNames={{
+                  trigger:
+                    "bg-[var(--green-600)]! text-[#0b1a15]! ring-0 outline-none! focus-visible:outline-none! focus-visible:ring-0",
+                  bubbleSurface:
+                    "bg-[var(--green-600)]! text-[#0b1a15]! ring-0",
+                  input:
+                    "outline-none! focus-visible:outline-none! text-[#0b1a15]! placeholder:text-[#0b1a15]/70 dark:placeholder:text-[#0b1a15]/70",
+                }}
               />
             </div>
+          </div>
+          <div className="actions" style={{ alignItems: "center" }}>
             {isManager ? (
-              <select className="select" style={{ width: 180 }} value="" disabled>
+              <select
+                className="select"
+                style={{ width: 180 }}
+                value=""
+                disabled
+              >
                 <option value="">
                   {managedDepartments.length
                     ? managedDepartments.map((d) => d.name).join(", ")
@@ -114,8 +132,6 @@ export default function Employees() {
                 <option value="employee">Employee</option>
               </select>
             )}
-          </div>
-          <div className="actions">
             <span className="mono small dim">{data?.length ?? 0} people</span>
           </div>
         </div>
@@ -169,8 +185,8 @@ export default function Employees() {
                       {e.role === "manager"
                         ? "Admin"
                         : e.role === "admin"
-                        ? "—"
-                        : (e.manager?.full_name ?? "—")}
+                          ? "—"
+                          : (e.manager?.full_name ?? "—")}
                     </td>
                     <td>
                       <Badge kind={e.role}>{e.role}</Badge>
